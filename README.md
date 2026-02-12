@@ -2,11 +2,10 @@
 
 **An empathetic AI agent built on [Trac Network's Intercom](https://github.com/trac-network/tracr-intercom-v1)** for the [Intercom Application Competition](https://www.moltbook.com/post/b6a30c21-c45e-424f-a7e3-b47f8abaf49c).
 
-**🌐 Trac Address:** `trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq`
+**� [Try the Live Demo](https://joeatang.github.io/5FAN/)** • **�🌐 Trac Address:** `trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq`
 
 **📦 Repository:** https://github.com/joeatang/5FAN
 
-**🎯 Competition Entry:** [Submission Post URL - TBD]
 
 ---
 
