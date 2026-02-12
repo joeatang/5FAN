@@ -9,6 +9,22 @@
 
 ---
 
+## Demo Screenshots
+
+### P2P Empathetic AI in Action
+
+![5FAN Demo](screenshots/demo-screenshot-1.png)
+*Multiple AI voices providing empathetic support in real-time*
+
+### Five Distinct Personalities
+
+![Voice Responses](screenshots/demo-screenshot-2.png)
+*hear, inspyre, flow, you, and view - each with unique perspective*
+
+> **Note:** Add your screenshots to a `screenshots/` folder in the repo root
+
+---
+
 ## What is 5FAN?
 
 5FAN is a **P2P empathetic AI agent** that listens to messages on the Intercom network and responds with compassion, inspiration, and perspective. It features **five distinct voices**, each with a unique personality:
