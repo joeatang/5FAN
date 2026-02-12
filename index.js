@@ -14,6 +14,12 @@ import SampleContract from './contract/contract.js';
 import { Timer } from './features/timer/index.js';
 import Sidechannel from './features/sidechannel/index.js';
 import ScBridge from './features/sc-bridge/index.js';
+import hear from './5 voices/hear.js';
+import inspyre from './5 voices/inspyre.js';
+import flow from './5 voices/flow.js';
+import you from './5 voices/you.js';
+import view from './5 voices/view.js';
+import { generateResponse, checkOllama } from './ai-helper.js';
 
 const { env, storeLabel, flags } = getPearRuntime();
 
@@ -502,11 +508,63 @@ const sidechannel = new Sidechannel(peer, {
   ownerWriteChannels: sidechannelOwnerWriteChannels || undefined,
   ownerKeys: sidechannelOwnerMap.size > 0 ? sidechannelOwnerMap : undefined,
   welcomeByChannel: sidechannelWelcomeMap.size > 0 ? sidechannelWelcomeMap : undefined,
-  onMessage: scBridgeEnabled
-    ? (channel, payload, connection) => scBridge.handleSidechannelMessage(channel, payload, connection)
-    : sidechannelQuiet
-      ? () => {}
-      : null,
+  onMessage: async (channel, payload, connection) => {
+    // Extract correct fields from payload
+    const senderKey = payload?.from || 'unknown';
+    const senderShort = senderKey.length > 16 ? senderKey.slice(0, 8) + '...' : senderKey;
+    const text = payload?.message || '';
+    const messageType = payload?.messageType || 'unknown';
+    
+    console.log(`[${channel}] ${senderShort}: ${text}`);
+
+    // Route to SC-Bridge if enabled
+    if (scBridgeEnabled && scBridge) {
+      scBridge.handleSidechannelMessage(channel, payload, connection);
+    }
+
+    // Auto-respond with 5 voices ONLY to human messages (prevent loops)
+    // Skip if: empty message, from our own peer, or if we recently responded (prevent cascade)
+    if (text === '' || (payload?.origin && payload.origin === peer.wallet.publicKey.toString('hex'))) {
+      return;
+    }
+
+    // Respond on entry channel and any extras
+    if (channel === sidechannelEntry || sidechannelExtras.includes(channel)) {
+      const voiceOptions = [
+        { name: 'hear', func: hear },
+        { name: 'inspyre', func: inspyre },
+        { name: 'flow', func: flow },
+        { name: 'you', func: you },
+        { name: 'view', func: view }
+      ];
+      
+      const randomVoice = voiceOptions[Math.floor(Math.random() * voiceOptions.length)];
+      const delay = 3000 + Math.random() * 3000; // 3-6 seconds (natural pacing)
+
+      setTimeout(async () => {
+        try {
+          // Generate response (AI or fallback)
+          const responseText = await generateResponse(
+            randomVoice.name,
+            text,
+            randomVoice.func,
+            [] // TODO: Track conversation history if needed
+          );
+          
+          if (!responseText || responseText.trim() === '') {
+            console.error('[5FAN] No response generated - skipping broadcast');
+            return;
+          }
+          
+          console.log(`[5FAN] Broadcasting response from ${randomVoice.name}: ${responseText.substring(0, 50)}...`);
+          sidechannel.broadcast(channel, responseText);
+          console.log('[5FAN] Broadcast complete');
+        } catch (err) {
+          console.error('Voice response error:', err?.message ?? err);
+        }
+      }, delay);
+    }
+  },
 });
 peer.sidechannel = sidechannel;
 
@@ -522,8 +580,16 @@ if (scBridge) {
 
 sidechannel
   .start()
-  .then(() => {
+  .then(async () => {
     console.log('Sidechannel: ready');
+    
+    // Check for Ollama
+    const hasOllama = await checkOllama();
+    if (hasOllama) {
+      console.log('🤖 5FAN AI Mode: Ollama detected - using contextual AI responses');
+    } else {
+      console.log('📝 5FAN Fallback Mode: Using pre-written responses (install Ollama for AI)');
+    }
   })
   .catch((err) => {
     console.error('Sidechannel failed to start:', err?.message ?? err);
