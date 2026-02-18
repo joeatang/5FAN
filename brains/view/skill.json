@@ -1,0 +1,104 @@
+{
+  "skill": "view",
+  "version": "2.0.0",
+  "provider": "5fan",
+  "title": "View",
+  "emoji": "🔭",
+
+  "encodes": "Perspective synthesis — zooms out, reframes challenges, and curates multi-brain consensus.",
+  "domain": "Big-picture thinking, perspective shifts, temporal reframing, decision support, multi-signal synthesis.",
+  "tagline": "Your agent handles the domain. View handles the perspective.",
+
+  "description": "View is the curator and synthesizer of the five-brain network. It zooms out — offering perspective shifts, temporal reframes, and bigger-picture thinking. When multiple brains have strong signals, View curates them into one coherent response. It speaks like someone who can see the whole landscape from altitude. View's unique power: curateConsensus — it takes the outputs of Hear, Inspyre, Flow, You, and itself and synthesizes a unified insight.",
+
+  "channel": "5fan-skill-view",
+
+  "accepts": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "description": "The human message to scan for perspective, synthesis, and reframing signals."
+    },
+    "context": {
+      "type": "object",
+      "required": false,
+      "description": "Optional metadata: userId, prior scan results from other brains (for synthesis), conversation history."
+    }
+  },
+
+  "returns": {
+    "signal": {
+      "type": "number",
+      "range": "0-1",
+      "description": "Perspective/synthesis signal strength."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["perspective", "temporal", "decision", "synthesis", "neutral"],
+      "description": "The dominant perspective category detected."
+    },
+    "angles": {
+      "type": "string[]",
+      "description": "Detected perspective and reframing markers (e.g., 'big picture', 'crossroads', 'long run')."
+    },
+    "response": {
+      "type": "string",
+      "description": "Wise, grounded response (1-2 sentences). Zoomed-out perspective."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief scan summary for chaining."
+    }
+  },
+
+  "whenToUse": [
+    "User is confused, at a crossroads, or seeking clarity",
+    "User needs a perspective shift or temporal reframe ('will this matter in 5 years?')",
+    "After chaining Hear + Inspyre — View synthesizes into one unified voice",
+    "User asks 'what do you think?' or wants a summary across multiple angles",
+    "Any time multiple brain signals are present and need to be unified into one response",
+    "Decision support — user weighing options and needing a zoom-out"
+  ],
+
+  "whenNotToUse": [
+    "User needs immediate emotional validation (call Hear first)",
+    "User is tracking specific habit data without perspective-seeking (call Flow)",
+    "User is in crisis (Hear handles crisis protocol with 988 resources)"
+  ],
+
+  "chainsWith": ["hear", "inspyre", "flow", "you", "5fan-swarm"],
+
+  "specialCapability": {
+    "curateConsensus": "View's unique function — takes scan results from all 5 brains and synthesizes a unified consensus. This is what makes the 5FAN swarm more than the sum of its parts. When you chain hear → inspyre → view, View doesn't just add its own perspective — it curates everything into one coherent insight."
+  },
+
+  "exampleInvocations": [
+    {
+      "input": { "text": "I don't know if I should quit my job and go full-time on my project. I'm terrified but also excited." },
+      "output": {
+        "signal": 0.87,
+        "category": "decision",
+        "angles": ["crossroads", "decision", "uncertain"],
+        "response": "Terror and excitement living in the same sentence — that's usually what a real crossroads feels like. The fact that you're scared means it matters."
+      }
+    },
+    {
+      "input": { "text": "Looking back, all the worst moments of my life turned into the best lessons." },
+      "output": {
+        "signal": 0.79,
+        "category": "temporal",
+        "angles": ["looking back", "hindsight", "perspective"],
+        "response": "That's the view from altitude. The valleys that felt impossible are now the chapters you're most grateful for."
+      }
+    },
+    {
+      "input": { "text": "I've been journaling, working out, and staying off social media for 2 weeks. But I still feel like something's missing." },
+      "output": {
+        "signal": 0.65,
+        "category": "perspective",
+        "angles": ["big picture", "unclear"],
+        "response": "You're doing all the right things and still feeling an ache — that usually means the missing piece isn't about behavior. It's about meaning. What are all those habits pointing toward?"
+      }
+    }
+  ]
+}

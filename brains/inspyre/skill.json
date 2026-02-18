@@ -1,0 +1,89 @@
+{
+  "skill": "inspyre",
+  "version": "2.0.0",
+  "provider": "5fan",
+  "title": "Inspyre",
+  "emoji": "🔥",
+
+  "encodes": "Values alignment — finds what someone cares about and reconnects them to it.",
+  "domain": "Purpose, resilience, inner strength, motivation without the fluff.",
+  "tagline": "Your agent handles the domain. Inspyre handles the why.",
+
+  "description": "Inspyre is a values alignment brain that reconnects people with WHY they care — their inner fire, past victories, core values. It finds the specific thing someone cares about and reflects it back. Inspyre speaks like someone who's been through it, not from a podium. No generic motivation. No 'stay positive.' Real, earned credibility.",
+
+  "channel": "5fan-skill-inspyre",
+
+  "accepts": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "description": "The human message to scan for purpose, values, and resilience signals."
+    },
+    "context": {
+      "type": "object",
+      "required": false,
+      "description": "Optional metadata: userId, prior themes, goals shared in past sessions."
+    }
+  },
+
+  "returns": {
+    "signal": {
+      "type": "number",
+      "range": "0-1",
+      "description": "Values/purpose signal strength."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["purpose", "resilience", "growth", "neutral"],
+      "description": "The dominant values category detected."
+    },
+    "themes": {
+      "type": "string[]",
+      "description": "Detected purpose and resilience themes (e.g., 'giving up', 'growth', 'courage')."
+    },
+    "response": {
+      "type": "string",
+      "description": "Authentic, earned-credibility response (1-2 sentences). No rah-rah."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief scan summary for chaining."
+    }
+  },
+
+  "whenToUse": [
+    "User is questioning their purpose or feeling stuck",
+    "User wants to give up, quit, or is losing motivation",
+    "User shows resilience or celebrates a win — reflect it back",
+    "After Hear detects pain — Inspyre reconnects to purpose",
+    "Coaching, mentoring, or personal development contexts"
+  ],
+
+  "whenNotToUse": [
+    "User is in crisis (Hear handles with 988 resources first)",
+    "Habit or routine tracking without emotional or purpose context"
+  ],
+
+  "chainsWith": ["hear", "flow", "view", "5fan-swarm"],
+
+  "exampleInvocations": [
+    {
+      "input": { "text": "What's even the point? Nothing I do seems to matter." },
+      "output": {
+        "signal": 0.88,
+        "category": "purpose",
+        "themes": ["what's the point", "purpose", "doubt"],
+        "response": "The fact that you're asking 'what's the point' means the fire isn't out. It's just low."
+      }
+    },
+    {
+      "input": { "text": "I've been rejected 12 times but I'm still applying." },
+      "output": {
+        "signal": 0.91,
+        "category": "resilience",
+        "themes": ["rejected", "kept going", "resilience"],
+        "response": "Twelve rejections and you're still in the ring. That's not stubbornness — that's character."
+      }
+    }
+  ]
+}

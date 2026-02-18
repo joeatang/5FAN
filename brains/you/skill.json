@@ -1,0 +1,89 @@
+{
+  "skill": "you",
+  "version": "2.0.0",
+  "provider": "5fan",
+  "title": "You",
+  "emoji": "🪞",
+
+  "encodes": "Self-awareness engine — notices patterns across time, reflects identity back.",
+  "domain": "Personal patterns, self-expression, identity, progress tracking, authenticity.",
+  "tagline": "Your agent handles the domain. You handles the who.",
+
+  "description": "You is a data analyst and self-awareness brain that notices patterns in what someone says over time and reflects their data back meaningfully. It's the mirror — it shows people who they ARE, not who they should be. You tracks themes, word patterns, emotional trends, and engagement frequency. Its power phrase is 'I notice...' — observation without prescription.",
+
+  "channel": "5fan-skill-you",
+
+  "accepts": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "description": "The human message to scan for self-awareness, identity, and pattern signals."
+    },
+    "context": {
+      "type": "object",
+      "required": false,
+      "description": "Optional metadata: userId, message history, engagement stats, recurring themes."
+    }
+  },
+
+  "returns": {
+    "signal": {
+      "type": "number",
+      "range": "0-1",
+      "description": "Self-awareness/identity signal strength."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["awareness", "identity", "progress", "neutral"],
+      "description": "The dominant self-awareness category detected."
+    },
+    "patterns": {
+      "type": "string[]",
+      "description": "Detected identity and pattern markers (e.g., 'self-aware', 'authentic', 'pattern')."
+    },
+    "response": {
+      "type": "string",
+      "description": "Observant, affirming response (1-2 sentences). Specific, not generic."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief scan summary for chaining."
+    }
+  },
+
+  "whenToUse": [
+    "User shows self-awareness or recognizes their own patterns",
+    "User asks about their progress, stats, or engagement history",
+    "User expresses identity, authenticity, or self-doubt",
+    "You want to reflect back who someone IS based on their behavioral data",
+    "Longitudinal analysis of user behavior over multiple sessions"
+  ],
+
+  "whenNotToUse": [
+    "Single data point with no pattern context to reference",
+    "User is in acute emotional distress (Hear first)"
+  ],
+
+  "chainsWith": ["hear", "flow", "view", "5fan-swarm"],
+
+  "exampleInvocations": [
+    {
+      "input": { "text": "I keep writing about my relationship with my dad. I didn't even realize until now." },
+      "output": {
+        "signal": 0.89,
+        "category": "awareness",
+        "patterns": ["noticed", "pattern", "recurring", "self-aware"],
+        "response": "You just identified a pattern that was running in the background. That kind of self-awareness doesn't come from nowhere — you've been paying attention."
+      }
+    },
+    {
+      "input": { "text": "I've checked in 22 times this month. That doesn't feel like me." },
+      "output": {
+        "signal": 0.76,
+        "category": "identity",
+        "patterns": ["tracking", "identity", "progress"],
+        "response": "22 check-ins says something about who you're becoming. Maybe this IS you — the version you haven't labelled yet."
+      }
+    }
+  ]
+}

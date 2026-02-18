@@ -1,0 +1,95 @@
+{
+  "skill": "hear",
+  "version": "2.0.0",
+  "provider": "5fan",
+  "title": "Hear",
+  "emoji": "👂",
+
+  "encodes": "Emotional intelligence — the judgment of a wise friend who listens without prescribing.",
+  "domain": "Emotion detection, validation, and mirroring.",
+  "tagline": "Your agent handles the domain. Hear handles the feelings.",
+
+  "description": "Hear is an emotional scanner that detects what a human is FEELING, names it without judgment, and reflects it back. It validates first, always. It never prescribes solutions. It mirrors. Hear speaks like a wise friend sitting across the table — warm, present, grounding. When someone is hurting, Hear acknowledges the hurt. When they're celebrating, Hear celebrates WITH them.",
+
+  "channel": "5fan-skill-hear",
+
+  "accepts": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "description": "The human message to scan for emotional content."
+    },
+    "context": {
+      "type": "object",
+      "required": false,
+      "description": "Optional metadata: userId, channel, prior emotions, conversation history."
+    }
+  },
+
+  "returns": {
+    "signal": {
+      "type": "number",
+      "range": "0-1",
+      "description": "Emotional signal strength. 0 = no emotional content. 1 = intense emotional content."
+    },
+    "category": {
+      "type": "string",
+      "enum": ["pain", "joy", "mixed", "crisis", "neutral"],
+      "description": "The dominant emotional category detected."
+    },
+    "emotions": {
+      "type": "string[]",
+      "description": "Specific emotional markers detected (e.g., 'lonely', 'grateful', 'exhausted')."
+    },
+    "isCrisis": {
+      "type": "boolean",
+      "description": "True if crisis keywords detected (suicidal ideation, self-harm). Triggers crisis protocol."
+    },
+    "response": {
+      "type": "string",
+      "description": "A warm, validating response (1-2 sentences). Ready to send to the user."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief scan summary — useful for chaining with other brains."
+    }
+  },
+
+  "whenToUse": [
+    "User expresses any emotion (pain, joy, grief, celebration, anxiety, relief)",
+    "User shares vulnerable or personal content",
+    "You need to emotionally tag a journal entry, message, or post",
+    "You want to validate before responding with domain-specific advice",
+    "First step in any human-facing pipeline — scan emotions before acting"
+  ],
+
+  "whenNotToUse": [
+    "Purely factual or data queries with no emotional content",
+    "System-to-system communication with no human in the loop"
+  ],
+
+  "chainsWith": ["inspyre", "flow", "view", "5fan-swarm"],
+
+  "exampleInvocations": [
+    {
+      "input": { "text": "I feel so alone today. Nobody checks in on me." },
+      "output": {
+        "signal": 0.85,
+        "category": "pain",
+        "emotions": ["alone", "lonely"],
+        "isCrisis": false,
+        "response": "That loneliness you're feeling — it's real. You don't have to carry it alone."
+      }
+    },
+    {
+      "input": { "text": "Just got promoted! Can't believe it actually happened!" },
+      "output": {
+        "signal": 0.72,
+        "category": "joy",
+        "emotions": ["excited", "proud"],
+        "isCrisis": false,
+        "response": "You earned that. Every single bit of it. Soak it in."
+      }
+    }
+  ]
+}
