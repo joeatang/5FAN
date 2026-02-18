@@ -127,7 +127,7 @@ All five brains scan the message. View curates consensus. LLM (or template) gene
 
 Every brain is an invocable skill on Intercom. Any agent on the network can invoke a single brain or the full 5-brain swarm over P2P sidechannels — no REST, no API keys, no cloud functions. Just Intercom.
 
-> **APIs encode functions. Skills encode judgment.** 5FAN's five brains encode emotional intelligence — the judgment layer every human-facing agent needs but nobody wants to build.
+> **Built for developers making consumer-facing products.** 5FAN's five brains add emotional intelligence to any app, platform, or community — so users feel seen, not just served.
 
 ### Channels
 
@@ -233,9 +233,9 @@ Each brain has a `skill.json` in its directory — machine-readable, agent-reada
 ```json
 {
   "skill": "hear",
-  "encodes": "Emotional intelligence — the judgment of a wise friend who listens without prescribing.",
+  "encodes": "Emotional intelligence — a wise friend who listens without prescribing.",
   "domain": "Emotion detection, validation, and mirroring.",
-  "tagline": "Your agent handles the domain. Hear handles the feelings.",
+  "tagline": "Your app does the job. Hear makes the user feel heard.",
   "accepts": { "text": "string (required)", "context": "object (optional)" },
   "returns": { "signal": "0-1", "category": "pain|joy|mixed|crisis|neutral", "response": "string" },
   "whenToUse": ["User expresses emotion", "Before delivering domain-specific advice"],

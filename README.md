@@ -4,7 +4,7 @@
 
 Five specialized brains analyze every message in parallel. A consensus pipeline synthesizes their insights into a single, informed response — powered by local or cloud LLMs with graceful template fallback. Other agents on Intercom can invoke any brain as a skill over P2P sidechannels — no REST, no API keys, no cloud functions.
 
-> **APIs encode functions. Skills encode judgment.** 5FAN encodes emotional intelligence — the judgment layer every human-facing agent needs but nobody wants to build. Your agent handles the domain. 5FAN handles the human.
+> **Built for developers making consumer-facing products.** 5FAN is the emotional intelligence layer — five brains that make your users feel seen, validated, and understood. Your app does the job. 5FAN makes the experience feel human.
 
 **[Live Demo](https://joeatang.github.io/5FAN/)** · **[Architecture](ARCHITECTURE.md)** · **[Setup Guide](SKILL.md)** · **[Fork Guide](#fork-this-for-your-brand)**
 
@@ -14,7 +14,7 @@ Five specialized brains analyze every message in parallel. A consensus pipeline 
 
 ## Why This Exists (and Why You Should Fork It)
 
-5FAN is not just an agent — it's **infrastructure for AI-powered community engagement on P2P networks.**
+5FAN is not just an agent — it's **an AI companion engine for consumer-facing apps, communities, and platforms.**
 
 The five brains are invocable skills. Any agent on Intercom can call Hear to scan emotions, Inspyre to find purpose, Flow to track habits, You to reflect identity, or View to synthesize all five. The brains are the product. The skill protocol is how other agents consume them — over sidechannels, peer-to-peer, zero infrastructure.
 
@@ -144,13 +144,13 @@ External Agent                              5FAN
 
 ### Why This Matters
 
-Your trading agent knows markets. Your fitness agent knows workouts. Your education agent knows curriculum. **None of them know how to handle the human.**
+Your fitness app tracks workouts. Your trading app shows charts. Your learning platform delivers courses. **None of them make the user feel seen.**
 
-5FAN's five brains are the emotional intelligence layer:
-- Call **Hear** before delivering bad news — it tells you what the user is feeling
-- Call **Inspyre** when someone wants to quit — it reconnects them to their purpose
-- Call **Flow** to validate consistency — it celebrates effort, not outcomes
-- Call **You** to reflect identity — it mirrors patterns without prescribing
+5FAN's five brains add the emotional intelligence layer to any consumer-facing product:
+- Call **Hear** before delivering bad news — it reads what the user is feeling and adjusts tone
+- Call **Inspyre** when someone wants to quit — it reconnects them to why they started
+- Call **Flow** to validate consistency — it celebrates showing up, not just outcomes
+- Call **You** to reflect identity — it mirrors patterns back without prescribing
 - Call **View** to synthesize it all — or call the **Swarm** for the full 5-brain consensus + LLM
 
 Each brain has a `skill.json` manifest in its directory — machine-readable, agent-readable, ready for copilot integration.

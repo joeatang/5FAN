@@ -9,14 +9,14 @@
  * a skill:call message. 5FAN responds on the same channel with skill:result.
  *
  * ┌──────────────────────────────────────────────────────────┐
- * │  SKILL ERA: APIs encode functions. Skills encode judgment.│
+ * │  Built for developers making consumer-facing products.   │
  * │                                                          │
- * │  5FAN skills encode emotional intelligence —             │
- * │  the judgment layer every human-facing agent needs       │
- * │  but nobody wants to build.                              │
+ * │  5FAN skills add emotional intelligence to any app —     │
+ * │  five brains that make users feel seen, validated,        │
+ * │  and understood.                                         │
  * │                                                          │
- * │  Your agent handles the domain.                          │
- * │  5FAN handles the human.                                 │
+ * │  Your app does the job.                                  │
+ * │  5FAN makes the experience feel human.                   │
  * └──────────────────────────────────────────────────────────┘
  *
  * FORK GUIDE:
@@ -80,7 +80,7 @@ export const SKILL_REGISTRY = {
     channel: skillChannel('hear'),
     title: 'Hear',
     emoji: '👂',
-    encodes: 'Emotional intelligence — the judgment of a wise friend who listens without prescribing.',
+    encodes: 'Emotional intelligence — a wise friend who listens without prescribing.',
     domain: 'Emotion detection, validation, and mirroring.',
     accepts: {
       text: { type: 'string', required: true, description: 'The human message to scan for emotional content.' },
@@ -390,8 +390,8 @@ export function buildManifest() {
     type: MSG.MANIFEST,
     provider: '5fan',
     version: '2.0.0',
-    description: 'Five Brains Agentic Network — emotional intelligence skills for any agent.',
-    tagline: 'Your agent handles the domain. 5FAN handles the human.',
+    description: 'Five Brains Agentic Network — emotional intelligence for consumer-facing products.',
+    tagline: 'Your app does the job. 5FAN makes the user feel seen.',
     skills,
     ts: Date.now(),
   };

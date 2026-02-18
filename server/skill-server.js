@@ -16,12 +16,12 @@
  * Just Intercom sidechannels. P2P. Peer-to-peer brain invocation.
  *
  * ┌──────────────────────────────────────────────────────────────┐
- * │  APIs encode functions. Skills encode judgment.              │
- * │  5FAN skills encode emotional intelligence —                │
- * │  the five brains every human-facing agent needs             │
- * │  but nobody wants to build from scratch.                    │
+ * │  Built for developers making consumer-facing products.      │
+ * │  5FAN skills add emotional intelligence to any app —        │
+ * │  five brains that make users feel seen, validated,          │
+ * │  and understood.                                            │
  * │                                                             │
- * │  Your agent handles the domain. 5FAN handles the human.     │
+ * │  Your app does the job. 5FAN makes the experience human.    │
  * └──────────────────────────────────────────────────────────────┘
  */
 
