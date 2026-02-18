@@ -4,9 +4,24 @@
 
 Five specialized brains analyze every message in parallel. A consensus pipeline synthesizes their insights into a single, informed response — powered by local or cloud LLMs with graceful template fallback.
 
-**[Live Demo](https://joeatang.github.io/5FAN/)** · **[Architecture](ARCHITECTURE.md)** · **[Setup Guide](SKILL.md)**
+**[Live Demo](https://joeatang.github.io/5FAN/)** · **[Architecture](ARCHITECTURE.md)** · **[Setup Guide](SKILL.md)** · **[Fork Guide](#fork-this-for-your-brand)**
 
 **Trac Address:** `trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq`
+
+---
+
+## Why This Exists (and Why You Should Fork It)
+
+5FAN is not just an agent — it's **infrastructure for AI-powered community engagement on P2P networks.**
+
+The brain swarm architecture is domain-agnostic. The 5 brains (Hear, Inspyre, Flow, You, View) are a *template* — swap the keywords, templates, and personality and you have a completely different agent for a completely different community. The consensus pipeline, LLM bridge, trainer, scheduler, and feed responder all work regardless of what the brains are scanning for.
+
+**Built for any community, brand, or platform that wants:**
+- An AI companion that actually *understands* what people say (not just responds)
+- Multi-perspective analysis (not one-dimensional chatbot replies)
+- P2P infrastructure (no servers at scale, users own their data)
+- Works offline (template fallback — no LLM required)
+- Settlement on Bitcoin (via Trac Network + TAP Protocol)
 
 ---
 
@@ -241,16 +256,76 @@ Each brain directory contains three files:
 
 ---
 
-## Build Your Own Agent
+## Fork This for Your Brand
 
-5FAN is designed to be forked and customized:
+5FAN is designed to be forked. The architecture separates *what the brains do* from *how the system works* — so you change the personality without touching the engine.
 
-1. **Edit `app-context.js`** — Change the agent's identity and personality for your app
-2. **Edit `config.js`** — Toggle features, set timezone, configure LLM provider
-3. **Add a brain** — Copy any brain directory, create new `roleConfig.js` / `functions.js` / `index.js`, register in `brains/5fan.js`
-4. **Customize templates** — Each brain's `roleConfig.js` has category-specific response arrays
+### What It Looks Like for Real Brands
 
-The architecture is provider-agnostic: any OpenAI-compatible endpoint works (local or cloud).
+| If You're... | Your 5-Brain Agent Becomes | Brain Specializations |
+|---|---|---|
+| **VeeFriends / GaryVee** | VeeFAN — character-trait companion | Hear→Empathy, Inspyre→Hustle, Flow→Patience, You→Self-Awareness, View→Gratitude |
+| **Peloton / Fitness brand** | FitFAN — workout accountability | Hear→Recovery, Inspyre→PRs, Flow→Consistency, You→Body data, View→Progress |
+| **Calm / Mental health** | MindFAN — emotional wellness | Hear→Mood, Inspyre→Coping, Flow→Mindfulness streaks, You→Patterns, View→Holistic |
+| **Nike Running Club** | RunFAN — runner's companion | Hear→Runner's wall, Inspyre→Goals, Flow→Mileage, You→Splits data, View→Season plan |
+| **Recovery community** | SoberFAN — sobriety support | Hear→Crisis/cravings, Inspyre→Why I quit, Flow→Clean days, You→Triggers, View→Long game |
+| **Corporate wellness** | TeamFAN — employee engagement | Hear→Burnout, Inspyre→Purpose, Flow→Work-life, You→Team pulse, View→Culture |
+| **Education / EdTech** | StudyFAN — student support | Hear→Stress, Inspyre→Goals, Flow→Study habits, You→Grades, View→Semester plan |
+| **Sports franchise** | FanFAN — fan engagement | Hear→Game emotions, Inspyre→Loyalty, Flow→Watch streaks, You→Fan stats, View→Season |
+| **Creator economy** | CreatorFAN — audience companion | Hear→Sentiment, Inspyre→Vision, Flow→Posting cadence, You→Audience data, View→Strategy |
+
+### What You Change vs What You Keep
+
+| You Change (30 min) | You Keep (entire engine) |
+|---|---|
+| `app-context.js` — AI personality & voice | Consensus pipeline (parallel scan → curate → respond) |
+| `brains/*/roleConfig.js` — keywords & templates | LLM bridge (local → cloud → template fallback) |
+| `config.js` — feature flags & timezone | Trainer system (open + guided exercises) |
+| Brain names (Hear→Recovery, etc.) | Proactive scheduler (timezone-aware) |
+| Template response text | Feed auto-responder (rate-limited) |
+| | User profiling (word-frequency + onboarding) |
+| | REST API (`/v1/5fan/*`) |
+| | P2P routing (Intercom sidechannels) |
+| | Crisis detection + hotline referral |
+
+### Step-by-Step Fork
+
+```bash
+# 1. Clone
+git clone https://github.com/joeatang/5FAN.git my-brand-agent
+cd my-brand-agent
+npm install
+
+# 2. Edit app-context.js — change the personality
+#    "You are VeeFAN, a character-trait companion for the VeeFriends community..."
+
+# 3. Edit brains/*/roleConfig.js — change keywords + templates
+#    Hear: swap emotion words for your domain
+#    Inspyre: swap motivational triggers
+#    Flow: swap habit/consistency keywords
+#    You: swap identity/data markers
+#    View: swap synthesis templates
+
+# 4. Edit config.js — your timezone, LLM provider, feature flags
+
+# 5. Run it
+pear run . --peer-store-name admin --msb-store-name admin_msb \
+  --dht-bootstrap "node1.hyperdht.org:49737,node2.hyperdht.org:49737"
+```
+
+You now have a 5-brain AI agent on a P2P network with multi-provider LLM, 1:1 coaching, proactive community engagement, and crisis detection — customized for your brand.
+
+### Add a 6th Brain
+
+Need a brain that doesn't exist? Add one:
+
+1. `mkdir brains/mybrain` — create the directory
+2. Copy `roleConfig.js`, `functions.js`, `index.js` from any existing brain
+3. Change the scan keywords, templates, and personality
+4. Register in `brains/5fan.js` → add to `BRAINS` array
+5. Import in `server/brain-swarm.js` → add to scan array
+
+View's `curateConsensus()` automatically incorporates the new brain's signals — no other changes needed.
 
 ---
 

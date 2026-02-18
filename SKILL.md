@@ -259,7 +259,65 @@ Hear scans for suicide/self-harm keywords. Ensure `crossBrain: true` in config s
 
 ---
 
-## Adding a New Brain
+## Forking 5FAN for Your Brand
+
+5FAN is designed to be forked. You change the personality — the engine stays the same.
+
+### What to Change
+
+| File | What You Edit | Time |
+|------|--------------|------|
+| `app-context.js` | Agent personality, voice, system prompt | 10 min |
+| `brains/*/roleConfig.js` | Trigger keywords + template responses per brain | 20 min |
+| `config.js` | Timezone, LLM provider, feature flags | 5 min |
+
+### What You Keep (Untouched)
+
+- `server/brain-swarm.js` — parallel scan engine + consensus pipeline
+- `server/lm-bridge.js` — multi-provider LLM (auto-fallback chain)
+- `server/trainer-api.js` — 1:1 conversation manager + guided exercises
+- `server/proactive-scheduler.js` — timezone-aware community posts
+- `server/feed-responder.js` — rate-limited auto-replies
+- `brains/view/functions.js` — `curateConsensus()` (synthesizes all brain signals)
+- `intercom-swarm.js` — P2P routing via Intercom sidechannels
+- `lm-local.js` / `lm-cloud.js` — LLM adapters
+
+### Example: VeeFriends Fork
+
+```js
+// app-context.js — change the personality
+export const APP_CONTEXT = `
+You are VeeFAN, the AI companion for the VeeFriends community.
+You embody Gary Vaynerchuk's philosophy: empathy, accountability,
+humility, patience, and kindness. You encourage character-trait
+development through daily practice.
+`;
+
+// brains/hear/roleConfig.js — change triggers
+export default {
+  name: 'hear',
+  title: 'Empathy Brain',
+  triggers: ['struggling', 'grateful', 'frustrated', 'excited', 'nervous', ...],
+  templates: {
+    pain: ['Character is forged in the struggle. I see you.', ...],
+    joy: ['That gratitude energy is contagious! Keep radiating.', ...],
+  }
+};
+
+// brains/inspyre/roleConfig.js — change triggers
+export default {
+  name: 'inspyre',
+  title: 'Hustle Brain',
+  triggers: ['grinding', 'building', 'creating', 'shipping', 'executing', ...],
+  templates: {
+    growth: ['Macro patience, micro speed. You\'re doing it right.', ...],
+  }
+};
+```
+
+Same 5-brain consensus pipeline. Same LLM fallback chain. Different brand.
+
+### Adding a 6th Brain
 
 1. Create `brains/mybrain/` with three files:
    - `roleConfig.js` — title, keywords, templates
@@ -268,6 +326,8 @@ Hear scans for suicide/self-harm keywords. Ensure `crossBrain: true` in config s
 2. Register in `brains/5fan.js` → `BRAINS` constant
 3. Import in `server/brain-swarm.js` → add to scan array
 
+View's `curateConsensus()` automatically incorporates new brain signals.
+
 ---
 
 ## Support
@@ -275,6 +335,8 @@ Hear scans for suicide/self-harm keywords. Ensure `crossBrain: true` in config s
 **Issues:** https://github.com/joeatang/5FAN/issues
 
 **Architecture:** See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed system diagrams.
+
+**Fork guide:** See [README.md](README.md#fork-this-for-your-brand) for brand-specific examples.
 
 ---
 
