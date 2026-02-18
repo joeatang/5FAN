@@ -1,197 +1,268 @@
-# 5FAN - Five Voices Agentic Network
+# 5FAN — Five Brains Agentic Network
 
-**An empathetic AI agent built on [Trac Network's Intercom](https://github.com/trac-network/tracr-intercom-v1)** for the [Intercom Application Competition](https://www.moltbook.com/post/b6a30c21-c45e-424f-a7e3-b47f8abaf49c).
+**A multi-brain AI agent built on [Trac Network's Intercom](https://github.com/Trac-Systems/intercom).**
 
-**� [Try the Live Demo](https://joeatang.github.io/5FAN/)** • **�🌐 Trac Address:** `trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq`
+Five specialized brains analyze every message in parallel. A consensus pipeline synthesizes their insights into a single, informed response — powered by local or cloud LLMs with graceful template fallback.
 
-**📦 Repository:** https://github.com/joeatang/5FAN
+**[Live Demo](https://joeatang.github.io/5FAN/)** · **[Architecture](ARCHITECTURE.md)** · **[Setup Guide](SKILL.md)**
 
-
----
-
-## Demo & Screenshots
-
-**🎭 [Try the Interactive Demo](https://joeatang.github.io/5FAN/)** - Experience 5FAN's empathetic AI in your browser
-
-### Proof of Concept
-
-![5FAN Demo - Context-Aware Empathetic Support](screenshots/5fan-demo.png)
-*5FAN responding with contextually appropriate empathy: hear, inspyre, flow, you, and view voices providing multi-layered psychological support in real-time*
-
-**Key Features Demonstrated:**
-- ✅ Multiple AI voices responding to the same input with distinct perspectives
-- ✅ Context-aware sentiment detection (challenging vs. positive messages)
-- ✅ 3-6 second natural response timing
-- ✅ P2P architecture simulation (entry channel: 0000intercom)
-- ✅ 394 unique empathetic responses across 5 personalities
+**Trac Address:** `trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq`
 
 ---
 
-## What is 5FAN?
+## What Changed in v2
 
-5FAN is a **P2P empathetic AI agent** that listens to messages on the Intercom network and responds with compassion, inspiration, and perspective. It features **five distinct voices**, each with a unique personality:
+| | v1 | v2 |
+|---|---|---|
+| **Analysis** | Random voice selection | 5 brains scan in parallel |
+| **Synthesis** | Single voice template | View brain curates consensus |
+| **LLM** | Ollama-only | Local → Cloud → Template auto-fallback |
+| **Conversation** | Broadcast only | 1:1 Trainer (open + guided exercises) |
+| **Community** | Passive | Proactive scheduled posts + feed auto-reply |
+| **Profiling** | None | Per-user word-frequency + onboarding |
+| **Config** | Hardcoded | Feature flags + kill switch |
 
-1. **Hear** - Empathetic listener that validates feelings and offers reflective support
-2. **Inspyre** - Motivational coach providing encouragement and forward momentum
-3. **Flow** - Zen guide promoting calm, presence, and mindful awareness
-4. **You** - Self-love advocate celebrating personal worth and achievements
-5. **View** - Perspective shifter offering alternative viewpoints and reframing
+---
 
-### AI-Powered & Resilient
+## The Five Brains
 
-5FAN integrates **Ollama (llama3.2:3b)** for contextually-aware AI responses that adapt to conversation tone and content. When Ollama is unavailable, it gracefully falls back to **394 pre-written empathetic responses** across all five voices, ensuring reliable operation.
+| Brain | Domain | Scans For | Signal |
+|-------|--------|-----------|--------|
+| **Hear** | Emotion | Pain, joy, crisis, mixed feelings | 0.0 – 1.0 |
+| **Inspyre** | Values | Purpose, resilience, growth themes | 0.0 – 1.0 |
+| **Flow** | Habits | Consistency, activity, recovery, flow state | 0.0 – 1.0 |
+| **You** | Identity | Self-awareness, patterns, personal data | 0.0 – 1.0 |
+| **View** | Synthesis | Perspective, decisions, temporal context | **+ curateConsensus()** |
 
-### Built on Intercom
+Every message flows through all five brains simultaneously. View's `curateConsensus()` ranks signals, identifies the dominant brain, and builds a synthesis prompt that enriches the LLM system message.
 
-5FAN extends [Trac Network's Intercom](https://github.com/trac-network/tracr-intercom-v1), a P2P reference implementation for an "internet of agents". Features:
-- **Sidechannels**: Fast, ephemeral P2P messaging (no central server)
-- **HyperDHT + Hyperswarm**: Direct peer-to-peer discovery and communication
-- **SC-Bridge**: WebSocket control surface for agent integration
-- **MSB integration**: Optional value-settled transactions
+**Crisis detection:** Hear scans for suicide/self-harm keywords and immediately provides hotline resources — no LLM delay.
+
+---
+
+## Consensus Pipeline
+
+```
+User message
+    │
+    ├─→ Hear.scan()    ─→ { signal: 0.7, emotions: ['frustration'], category: 'pain' }
+    ├─→ Inspyre.scan() ─→ { signal: 0.4, themes: ['growth'] }
+    ├─→ Flow.scan()    ─→ { signal: 0.2, category: 'recovery' }
+    ├─→ You.scan()     ─→ { signal: 0.3, markers: ['self-reflection'] }
+    └─→ View.scan()    ─→ { signal: 0.5, category: 'perspective' }
+                               │
+                  View.curateConsensus()
+                               │
+                               ▼
+               { dominantBrain: 'hear',
+                 synthesisPrompt: '...',
+                 activeBrainCount: 4 }
+                               │
+                    ┌──────────┴──────────┐
+                    │  LLM Bridge         │
+                    │  local → cloud →    │
+                    │  template fallback  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                        Final response
+```
 
 ---
 
 ## Quick Start
 
-**Prerequisites:** Node.js 22.x/23.x, [Pear runtime](https://docs.pears.com/guides/getting-started), optional [Ollama](https://ollama.ai/)
+### Prerequisites
 
-**Install & Run:**
+- **Node.js** 22.x or 23.x
+- **[Pear Runtime](https://docs.pears.com/guides/getting-started)**
+- **LLM** (optional): [LM Studio](https://lmstudio.ai/) or [Ollama](https://ollama.ai/) for local; Groq/OpenRouter/Together.ai for cloud
+
+### Install
+
 ```bash
-# Clone and install
 git clone https://github.com/joeatang/5FAN.git
 cd 5FAN
 npm install
+```
 
-# Optional: Install Ollama for AI-powered responses
-# ollama pull llama3.2:3b
+### Run
 
-# Terminal 1 - Admin peer
+```bash
+# Terminal 1 — Admin peer
 pear run . --peer-store-name admin --msb-store-name admin_msb \
   --dht-bootstrap "node1.hyperdht.org:49737,node2.hyperdht.org:49737"
 
-# Terminal 2 - Second peer
+# Terminal 2 — Second peer
 pear run . --peer-store-name peer2 --msb-store-name peer2_msb \
   --dht-bootstrap "node1.hyperdht.org:49737,node2.hyperdht.org:49737"
 
-# In both terminals, join the entry channel
+# In both terminals
 join 0000intercom
-
-# Send a message - 5FAN will respond in 3-6 seconds!
 send Hello world
 ```
 
-**See [SKILL.md](SKILL.md) for complete setup and troubleshooting.**
+5FAN scans the message across all five brains, builds consensus, enriches via LLM (if available), and broadcasts a response.
 
 ---
 
-## How It Works
+## LLM Configuration
 
-When you send a message on the `0000intercom` channel, 5FAN:
-1. **Listens** via Intercom's P2P sidechannel messaging
-2. **Selects** one of five voices randomly
-3. **Generates** a contextual response using Ollama AI (or falls back to pre-written responses)
-4. **Responds** after 3-6 seconds with empathy and insight
-5. **Broadcasts** back to the P2P network - all peers see the response
+### Local LLM (recommended for development)
 
-### Response Strategy
-- **AI Mode** (Ollama detected): Contextual responses using each voice's personality prompt
-- **Fallback Mode** (no Ollama): 394 unique pre-written responses ensure reliability
-- **Timing**: 3-6 second delays create natural, thoughtful conversation pacing
+Start LM Studio or Ollama — 5FAN auto-detects at `localhost:1234` (LM Studio) or `localhost:11434` (Ollama).
 
----
-
-## Architecture
-
-5FAN runs as a single long-running Pear process built on Intercom's three networking "planes":
-- **Subnet plane**: Deterministic state replication (Autobase/Hyperbee over Hyperswarm/Protomux)
-- **Sidechannel plane**: Fast ephemeral messaging (Hyperswarm/Protomux) - **where 5FAN listens & responds**
-- **MSB plane**: Optional value-settled transactions (Peer -> MSB client -> validator network)
-
-```text
-                          Pear runtime (mandatory)
-                pear run . --peer-store-name <peer> --msb-store-name <msb>
-                                        |
-                                        v
-  +-------------------------------------------------------------------------+
-  |                        5FAN powered by Intercom                         |
-  |                                                                         |
-  |  🤖 5FAN Integration:                                                   |
-  |  - 5 Voices (hear, inspyre, flow, you, view)                            |
-  |  - Ollama AI (llama3.2:3b) + 394 fallback responses                     |
-  |  - Listens to sidechannel messages, responds with empathy               |
-  |                                                                         |
-  |  Local state:                                                          |
-  |  - stores/<peer-store-name>/...   (peer identity, subnet state, etc)    |
-  |  - stores/<msb-store-name>/...    (MSB wallet/client state)             |
-  |                                                                         |
-  |  Networking planes:                                                     |
-  |                                                                         |
-  |  [1] Subnet plane (replication)                                         |
-  |      --subnet-channel <name>                                            |
-  |      --subnet-bootstrap <admin-writer-key-hex>  (joiners only)          |
-  |                                                                         |
-  |  [2] Sidechannel plane (ephemeral messaging) ⭐ 5FAN OPERATES HERE      |
-  |      entry: 0000intercom   (name-only, open to all)                     |
-  |      extras: --sidechannels chan1,chan2                                 |
-  |      policy (per channel): welcome / owner-only write / invites         |
-  |      relay: optional peers forward plaintext payloads to others          |
-  |                                                                         |
-  |  [3] MSB plane (transactions / settlement)                               |
-  |      Peer -> MsbClient -> MSB validator network                          |
-  |                                                                         |
-  |  Agent control surface (preferred):                                     |
-  |  SC-Bridge (WebSocket, auth required)                                   |
-  |    JSON: auth, send, join, open, stats, info, ...                       |
-  +------------------------------+------------------------------+-----------+
-                                 |                              |
-                                 | SC-Bridge (ws://host:port)   | P2P (Hyperswarm)
-                                 v                              v
-                       +-----------------+            +-----------------------+
-                       | Agent / tooling |            | Other peers (P2P)     |
-                       | (no TTY needed) |<---------->| subnet + sidechannels |
-                       +-----------------+            +-----------------------+
-
-  Note: --dht-bootstrap recommended for local testing to ensure peer discovery
+```bash
+# LM Studio: just start the application and load a model
+# Ollama:
+ollama pull llama3.2:3b && ollama serve
 ```
 
----
+### Cloud LLM
 
-## Development Notes
+Set environment variables in your shell or `.env`:
 
-**Core Files:**
-- [`index.js`](index.js) - Main Intercom entry point with 5FAN message handler (lines 510-580)
-- [`ai-helper.js`](ai-helper.js) - Ollama integration with Node.js http module + fallback logic
-- [`5 voices/`](5%20voices/) - Five voice modules with personality-driven responses
+```bash
+export FIVEFAN_LM_KEY=gsk_your_groq_key_here
+export FIVEFAN_LM_CLOUD_URL=https://api.groq.com/openai
+export FIVEFAN_LM_CLOUD_MODEL=llama-3.3-70b-versatile
+```
 
-**Modifications from Base Intercom:**
-- Custom `onMessage` handler routes sidechannel messages to 5FAN voices
-- Async/await pattern for AI response generation
-- Ollama detection at startup (shows "🤖 5FAN AI Mode" or "📝 5FAN Fallback Mode")
-- Detailed logging with [AI], [Fallback], [5FAN] prefixes
+Supported providers (all OpenAI-compatible):
+- **Groq** — `https://api.groq.com/openai`
+- **OpenRouter** — `https://openrouter.ai/api`
+- **Together.ai** — `https://api.together.xyz`
 
-**Troubleshooting:**
-- Kill stuck processes: `pkill -9 -f pear-runtime`
-- Clean lock files: `find stores -name "LOCK" -delete`
-- Use separate `--peer-store-name` for each peer to avoid conflicts
-- Ollama must run at `localhost:11434` (install separately)
+### No LLM
+
+Works fine without any LLM — falls back to curated templates (40+ per brain, ~200 total).
 
 ---
 
-## Credits & Links
+## Feature Flags
+
+Edit `config.js` to toggle capabilities:
+
+```js
+features: {
+  feedReplies:   true,   // Auto-reply to community posts
+  trainer:       true,   // 1:1 conversation mode
+  nudges:        true,   // Contextual nudges in responses
+  proactive:     true,   // Scheduled community posts
+  crossBrain:    true,   // Multi-brain consensus
+  userProfiling: true,   // Per-user word-frequency tracking
+}
+```
+
+**Kill switch:** Set `FIVE_FAN.enabled = false` to disable all brain responses instantly.
+
+---
+
+## Trainer Mode
+
+DM the agent to start a 1:1 session:
+
+| Command | Action |
+|---------|--------|
+| *(any message)* | Open conversation with brain swarm enrichment |
+| `/exercise gratitude` | Guided gratitude exercise (5 prompts) |
+| `/exercise reframe` | Cognitive reframing exercise |
+| `/exercise values` | Values clarification |
+| `/exercise breathe` | Guided breathing |
+| `/exercise journal` | Reflective journaling |
+| `/exercises` | List all available exercises |
+| `/stats` | Session statistics |
+| `/open` | Switch back to open conversation |
+
+---
+
+## Proactive Scheduler
+
+Timezone-aware scheduled posts to the community channel:
+
+| Slot | Window | Theme |
+|------|--------|-------|
+| Morning | 7:00–9:00 | Energy, gratitude, intention |
+| Afternoon | 13:00–15:00 | Momentum, flow, connection |
+| Evening | 18:00–20:00 | Reflection, rest, celebration |
+
+10 templates per slot, LLM-enriched when available. Configurable timezone in `config.js`.
+
+---
+
+## REST API
+
+When using Express routes (`server/routes.js`):
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/v1/5fan/status` | GET | System status + LLM availability |
+| `/v1/5fan/analyze` | POST | Run brain swarm analysis on text |
+| `/v1/5fan/respond` | POST | Analyze + generate response |
+| `/v1/5fan/feed` | POST | Feed auto-reply |
+| `/v1/5fan/trainer` | POST | Trainer conversation turn |
+| `/v1/5fan/proactive` | GET | Generate proactive post |
+| `/v1/5fan/lm/status` | GET | LLM provider status |
+
+---
+
+## File Structure
+
+```
+5FAN/
+├── brains/
+│   ├── 5fan.js              # Shared config, constants, helpers
+│   ├── hear/                # Emotional scanner
+│   ├── inspyre/             # Values alignment
+│   ├── flow/                # Habit guardian
+│   ├── you/                 # Data analyst / profiler
+│   └── view/                # Curator + curateConsensus()
+├── server/
+│   ├── brain-swarm.js       # Parallel scan + consensus engine
+│   ├── lm-bridge.js         # Multi-provider LLM (auto-fallback)
+│   ├── feed-responder.js    # Community feed auto-reply
+│   ├── proactive-scheduler.js
+│   ├── trainer-api.js       # 1:1 conversation manager
+│   └── routes.js            # Express REST API
+├── config.js                # Master config + feature flags
+├── app-context.js           # System prompt identity
+├── user-profile.js          # Onboarding + profile persistence
+├── intercom-swarm.js        # P2P brain swarm routing
+├── lm-local.js              # Local LLM adapter
+├── lm-cloud.js              # Cloud LLM adapter
+├── index.js                 # Main Intercom entry point
+└── ARCHITECTURE.md          # Detailed architecture docs
+```
+
+Each brain directory contains three files:
+- `roleConfig.js` — Title, personality description, trigger keywords, template responses
+- `functions.js` — `scan()`, `fulfill()`, `log()`, `sendTo()`
+- `index.js` — `shouldRespond()`, `handleMessage()` (threshold-based)
+
+---
+
+## Build Your Own Agent
+
+5FAN is designed to be forked and customized:
+
+1. **Edit `app-context.js`** — Change the agent's identity and personality for your app
+2. **Edit `config.js`** — Toggle features, set timezone, configure LLM provider
+3. **Add a brain** — Copy any brain directory, create new `roleConfig.js` / `functions.js` / `index.js`, register in `brains/5fan.js`
+4. **Customize templates** — Each brain's `roleConfig.js` has category-specific response arrays
+
+The architecture is provider-agnostic: any OpenAI-compatible endpoint works (local or cloud).
+
+---
+
+## Credits
 
 **Built by:** [@joeatang](https://github.com/joeatang)
 
-**Original Intercom:** https://github.com/trac-network/tracr-intercom-v1
+**Built on:** [Trac Network Intercom](https://github.com/Trac-Systems/intercom) · [Pear Runtime](https://docs.pears.com) · [Trac Network](https://trac.network)
 
-**Trac Network:** https://trac.network
-
-**Competition:** https://www.moltbook.com/post/b6a30c21-c45e-424f-a7e3-b47f8abaf49c
-
-**Backed by Pear Runtime:** https://docs.pears.com
-
-**Powered by Ollama:** https://ollama.ai
+**LLM providers:** [LM Studio](https://lmstudio.ai/) · [Ollama](https://ollama.ai/) · [Groq](https://groq.com/) · [OpenRouter](https://openrouter.ai/) · [Together.ai](https://together.ai/)
 
 ---
 
-**Submission Date:** February 2026  
-**License:** Apache-2.0 (same as Intercom)
+**Version:** 2.0.0  
+**License:** Apache-2.0

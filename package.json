@@ -1,11 +1,24 @@
 {
-  "name": "contract-test-latest",
-  "version": "0.0.1",
+  "name": "5fan",
+  "version": "2.0.0",
+  "description": "Five Brains Agentic Network — Multi-brain AI agent for wellness/mindset apps on Trac Network's Intercom",
   "type": "module",
   "main": "index.js",
   "pear": {
-    "name": "contract-test-latest",
+    "name": "5fan",
     "type": "terminal"
+  },
+  "scripts": {
+    "start": "pear run .",
+    "start:admin": "pear run . --peer-store-name admin --msb-store-name admin_msb --dht-bootstrap \"node1.hyperdht.org:49737,node2.hyperdht.org:49737\"",
+    "start:peer": "pear run . --peer-store-name peer2 --msb-store-name peer2_msb --dht-bootstrap \"node1.hyperdht.org:49737,node2.hyperdht.org:49737\""
+  },
+  "keywords": ["5fan", "intercom", "trac", "ai", "wellness", "mindset", "p2p", "multi-brain"],
+  "author": "joeatang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joeatang/5FAN"
   },
   "dependencies": {
     "b4a": "^1.6.7",

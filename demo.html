@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5FAN - Five Voices Agentic Network</title>
+    <title>5FAN — Five Brains Agentic Network</title>
     <style>
         * {
             margin: 0;
@@ -75,8 +75,8 @@
             font-style: italic;
         }
 
-        /* Voices Grid */
-        .voices-section {
+        /* Brain Grid */
+        .brains-section {
             padding: 80px 20px;
             text-align: center;
         }
@@ -96,14 +96,14 @@
             margin-bottom: 60px;
         }
 
-        .voices-grid {
+        .brains-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
             margin-bottom: 60px;
         }
 
-        .voice-card {
+        .brain-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             padding: 40px 30px;
@@ -114,7 +114,7 @@
             overflow: hidden;
         }
 
-        .voice-card::before {
+        .brain-card::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -126,64 +126,127 @@
             transition: opacity 0.3s ease;
         }
 
-        .voice-card:hover {
+        .brain-card:hover {
             transform: translateY(-10px);
             border-color: rgba(255, 107, 157, 0.6);
             box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);
         }
 
-        .voice-card:hover::before {
+        .brain-card:hover::before {
             opacity: 1;
         }
 
-        .voice-emoji {
+        .brain-card.active {
+            border-color: #ff6b9d;
+        }
+
+        .brain-emoji {
             font-size: 60px;
             margin-bottom: 20px;
             display: block;
         }
 
-        .voice-name {
+        .brain-name {
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             color: #ff6b9d;
         }
 
-        .voice-description {
+        .brain-role {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .brain-description {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
             line-height: 1.6;
         }
 
-        .voice-response {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 107, 157, 0.1);
-            border-radius: 10px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.9);
-            font-style: italic;
+        .brain-signal {
+            margin-top: 15px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
             display: none;
-            animation: fadeIn 0.3s ease;
         }
 
-        .voice-card.active .voice-response {
+        .brain-signal-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d, #c06c84);
+            border-radius: 2px;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
+        .brain-card.active .brain-signal {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Consensus Pipeline */
+        .pipeline-section {
+            padding: 80px 20px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .pipeline {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .pipeline-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border-left: 3px solid rgba(255, 107, 157, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-step.active {
+            border-left-color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.05);
+        }
+
+        .pipeline-number {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ff6b9d;
+            min-width: 40px;
+        }
+
+        .pipeline-content h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .pipeline-content p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .pipeline-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: rgba(255, 107, 157, 0.3);
+            margin-bottom: 15px;
         }
 
         /* Interactive Demo */
         .demo-section {
             padding: 80px 20px;
-            background: rgba(255, 255, 255, 0.02);
         }
 
         .demo-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             text-align: center;
         }
@@ -227,95 +290,105 @@
             box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
         }
 
-        .demo-response {
-            margin-top: 40px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            border-left: 4px solid #ff6b9d;
-            text-align: left;
+        /* Brain scan results */
+        .scan-results {
             display: none;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .scan-results.show {
+            display: block;
+        }
+
+        .scan-result {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .scan-brain {
+            font-weight: 700;
+            color: #ff6b9d;
+            min-width: 70px;
+            font-size: 14px;
+        }
+
+        .scan-bar-container {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .scan-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d, #c06c84);
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        .scan-value {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .consensus-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 107, 157, 0.08);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 107, 157, 0.2);
             animation: slideIn 0.5s ease;
         }
 
-        .demo-response.show {
-            display: block;
+        .consensus-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .consensus-dominant {
+            font-size: 16px;
+            color: #ff6b9d;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .demo-response {
+            margin-top: 20px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid #ff6b9d;
+            text-align: left;
+            animation: slideIn 0.5s ease;
+        }
+
+        .response-text {
+            font-size: 17px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .response-voice {
-            font-size: 14px;
-            color: #ff6b9d;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .response-text {
-            font-size: 18px;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        /* Coming Soon */
-        .coming-soon {
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .coming-soon-box {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 60px 40px;
-            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(192, 108, 132, 0.1) 100%);
-            border-radius: 30px;
-            border: 2px solid rgba(255, 107, 157, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .coming-soon-box::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff6b9d, #c06c84, #6c5b7b, #ff6b9d);
-            background-size: 400%;
-            border-radius: 30px;
-            opacity: 0;
-            z-index: -1;
-            animation: gradientMove 3s ease infinite;
-        }
-
-        @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .coming-soon-title {
-            font-size: 36px;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .coming-soon-text {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
-        }
-
-        .hi-app-logo {
-            font-size: 48px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff6b9d 0%, #fff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         /* Footer */
@@ -374,7 +447,7 @@
             .tagline { font-size: 18px; }
             .quote { font-size: 16px; padding: 30px 20px; }
             .section-title { font-size: 36px; }
-            .voices-grid { grid-template-columns: 1fr; }
+            .brains-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -386,53 +459,103 @@
     <section class="hero">
         <div class="container">
             <div class="logo">5FAN</div>
-            <div class="tagline">Five Voices Agentic Network</div>
+            <div class="tagline">Five Brains Agentic Network</div>
             <div class="quote">
-                "5FAN defines a reinforcement layer for human-AI systems. As autonomous agents increasingly guide decisions in health, productivity, and personal development, sustained human engagement becomes a reliability constraint. Most agents optimize output. Few optimize persistence. 5FAN enables specialized support agents to deliver consistent, non-judgmental reinforcement aligned with long-term user stability. In agentic environments, psychological durability becomes infrastructure."
+                "Five specialized brains analyze every message in parallel. A consensus pipeline synthesizes their insights into a single, informed response. No single voice — collective intelligence."
             </div>
         </div>
     </section>
 
-    <!-- Voices Section -->
-    <section class="voices-section">
+    <!-- Brains Section -->
+    <section class="brains-section">
         <div class="container">
-            <h2 class="section-title">Meet the Five Voices</h2>
-            <p class="section-subtitle">394 unique empathetic responses • AI-powered with graceful fallback</p>
-            
-            <div class="voices-grid">
-                <div class="voice-card" data-voice="hear">
-                    <span class="voice-emoji">👂</span>
-                    <div class="voice-name">hear</div>
-                    <div class="voice-description">Empathetic listener that validates feelings and offers reflective support</div>
-                    <div class="voice-response">"I hear you - that sounds really challenging. Your feelings are completely valid."</div>
+            <h2 class="section-title">The Five Brains</h2>
+            <p class="section-subtitle">Parallel analysis · Consensus curation · LLM-enriched responses</p>
+
+            <div class="brains-grid">
+                <div class="brain-card" data-brain="hear">
+                    <span class="brain-emoji">👂</span>
+                    <div class="brain-name">Hear</div>
+                    <div class="brain-role">Emotional Scanner</div>
+                    <div class="brain-description">Detects pain, joy, crisis signals, and mixed feelings. Validates emotions before anything else.</div>
+                    <div class="brain-signal"><div class="brain-signal-bar"></div></div>
                 </div>
 
-                <div class="voice-card" data-voice="inspyre">
-                    <span class="voice-emoji">🚀</span>
-                    <div class="voice-name">inspyre</div>
-                    <div class="voice-description">Motivational coach providing encouragement and forward momentum</div>
-                    <div class="voice-response">"You've got this! Every expert was once a beginner. Take the next small step."</div>
+                <div class="brain-card" data-brain="inspyre">
+                    <span class="brain-emoji">🚀</span>
+                    <div class="brain-name">Inspyre</div>
+                    <div class="brain-role">Values Alignment</div>
+                    <div class="brain-description">Identifies purpose, resilience, and growth themes. Reconnects struggles to deeper meaning.</div>
+                    <div class="brain-signal"><div class="brain-signal-bar"></div></div>
                 </div>
 
-                <div class="voice-card" data-voice="flow">
-                    <span class="voice-emoji">🧘</span>
-                    <div class="voice-name">flow</div>
-                    <div class="voice-description">Zen guide promoting calm, presence, and mindful awareness</div>
-                    <div class="voice-response">"Take a breath. This moment is all there is. Everything flows at its own pace."</div>
+                <div class="brain-card" data-brain="flow">
+                    <span class="brain-emoji">🧘</span>
+                    <div class="brain-name">Flow</div>
+                    <div class="brain-role">Habit Guardian</div>
+                    <div class="brain-description">Tracks consistency, activity, recovery patterns, and flow states. Celebrates showing up.</div>
+                    <div class="brain-signal"><div class="brain-signal-bar"></div></div>
                 </div>
 
-                <div class="voice-card" data-voice="you">
-                    <span class="voice-emoji">💝</span>
-                    <div class="voice-name">you</div>
-                    <div class="voice-description">Self-love advocate celebrating personal worth and achievements</div>
-                    <div class="voice-response">"You're doing amazing! Celebrating your courage to share and grow."</div>
+                <div class="brain-card" data-brain="you">
+                    <span class="brain-emoji">💝</span>
+                    <div class="brain-name">You</div>
+                    <div class="brain-role">Data Analyst</div>
+                    <div class="brain-description">Builds per-user profiles from word patterns. Reflects identity, self-awareness, and growth markers.</div>
+                    <div class="brain-signal"><div class="brain-signal-bar"></div></div>
                 </div>
 
-                <div class="voice-card" data-voice="view">
-                    <span class="voice-emoji">🔮</span>
-                    <div class="voice-name">view</div>
-                    <div class="voice-description">Perspective shifter offering alternative viewpoints and reframing</div>
-                    <div class="voice-response">"What if this challenge is actually an opportunity in disguise?"</div>
+                <div class="brain-card" data-brain="view">
+                    <span class="brain-emoji">🔮</span>
+                    <div class="brain-name">View</div>
+                    <div class="brain-role">Curator · Synthesizer</div>
+                    <div class="brain-description">Curates consensus from all brains. Ranks signals, identifies the dominant perspective, builds the synthesis prompt.</div>
+                    <div class="brain-signal"><div class="brain-signal-bar"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Consensus Pipeline Section -->
+    <section class="pipeline-section">
+        <div class="container">
+            <h2 class="section-title">Consensus Pipeline</h2>
+            <p class="section-subtitle">How five brains become one response</p>
+
+            <div class="pipeline">
+                <div class="pipeline-step" id="step1">
+                    <div class="pipeline-number">1</div>
+                    <div class="pipeline-content">
+                        <h3>Parallel Scan</h3>
+                        <p>All five brains scan the message simultaneously. Each produces a signal strength (0.0 – 1.0) and domain-specific insights.</p>
+                    </div>
+                </div>
+                <div class="pipeline-arrow">↓</div>
+
+                <div class="pipeline-step" id="step2">
+                    <div class="pipeline-number">2</div>
+                    <div class="pipeline-content">
+                        <h3>View Curates Consensus</h3>
+                        <p>View's curateConsensus() ranks all signals, identifies the dominant brain, and builds a synthesis prompt combining all active insights.</p>
+                    </div>
+                </div>
+                <div class="pipeline-arrow">↓</div>
+
+                <div class="pipeline-step" id="step3">
+                    <div class="pipeline-number">3</div>
+                    <div class="pipeline-content">
+                        <h3>LLM Enrichment</h3>
+                        <p>The enriched system prompt (app context + brain consensus + user profile) is sent to the LLM. Falls back: local → cloud → template.</p>
+                    </div>
+                </div>
+                <div class="pipeline-arrow">↓</div>
+
+                <div class="pipeline-step" id="step4">
+                    <div class="pipeline-number">4</div>
+                    <div class="pipeline-content">
+                        <h3>Response</h3>
+                        <p>A single, informed response is broadcast to the P2P network — synthesized from five perspectives, not just one random voice.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -442,31 +565,16 @@
     <section class="demo-section">
         <div class="container">
             <div class="demo-container">
-                <h2 class="section-title">Try It Live</h2>
-                <p class="section-subtitle">Share how you're feeling, get empathetic support</p>
-                
-                <input type="text" 
-                       class="demo-input" 
-                       id="userInput" 
-                       placeholder="I'm feeling...">
-                <button class="demo-button" onclick="generateResponse()">Get Support</button>
-                
-                <div class="demo-response" id="demoResponse">
-                    <div class="response-voice" id="responseVoice"></div>
-                    <div class="response-text" id="responseText"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+                <h2 class="section-title">Try the Brain Swarm</h2>
+                <p class="section-subtitle">Type a message and watch all five brains analyze it</p>
 
-    <!-- Coming Soon -->
-    <section class="coming-soon">
-        <div class="container">
-            <div class="coming-soon-box">
-                <h2 class="coming-soon-title">Coming Soon</h2>
-                <p class="coming-soon-text">5FAN integration with the Hi app</p>
-                <div class="hi-app-logo">5FAN × Hi</div>
-                <p class="section-subtitle" style="margin-top: 20px;">Bringing empathetic AI to your daily interactions</p>
+                <input type="text"
+                       class="demo-input"
+                       id="userInput"
+                       placeholder="I've been feeling overwhelmed but I'm trying to stay consistent...">
+                <button class="demo-button" onclick="runBrainSwarm()">Analyze</button>
+
+                <div class="scan-results" id="scanResults"></div>
             </div>
         </div>
     </section>
@@ -476,99 +584,201 @@
         <div class="container">
             <div class="footer-links">
                 <a href="https://github.com/joeatang/5FAN" class="footer-link" target="_blank">GitHub</a>
-                <a href="https://github.com/trac-network/tracr-intercom-v1" class="footer-link" target="_blank">Built on Intercom</a>
-                <a href="https://www.moltbook.com/post/b6a30c21-c45e-424f-a7e3-b47f8abaf49c" class="footer-link" target="_blank">Competition</a>
+                <a href="https://github.com/Trac-Systems/intercom" class="footer-link" target="_blank">Built on Intercom</a>
+                <a href="ARCHITECTURE.md" class="footer-link">Architecture</a>
                 <a href="https://trac.network" class="footer-link" target="_blank">Trac Network</a>
             </div>
             <div class="footer-trac">trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq</div>
-            <p style="margin-top: 30px; color: rgba(255,255,255,0.5); font-size: 14px;">Built with 💝 by @joeatang • Competition Submission Feb 2026</p>
+            <p style="margin-top: 30px; color: rgba(255,255,255,0.5); font-size: 14px;">Built by @joeatang · v2.0.0</p>
         </div>
     </footer>
 
     <script>
-        // Voice card interactions
-        document.querySelectorAll('.voice-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // Remove active from all cards
-                document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('active'));
-                // Add active to clicked card
-                this.classList.add('active');
-            });
-        });
-
-        // Demo responses
-        const responses = {
-            hear: [
-                "I hear you - that sounds really challenging. Your feelings are completely valid.",
-                "What you're going through matters. I'm here to listen without judgment.",
-                "That takes courage to share. How can I support you right now?"
-            ],
-            inspyre: [
-                "You've got this! Every expert was once a beginner just like you.",
-                "This is your moment to shine. What's one small step you can take?",
-                "Your potential is limitless. Let's turn this into momentum!"
-            ],
-            flow: [
-                "Take a breath. This moment is all there is. Everything flows at its own pace.",
-                "In stillness, we find clarity. What if you let this unfold naturally?",
-                "Peace exists in the present. Feel the calm between thoughts."
-            ],
-            you: [
-                "You're doing amazing! Celebrating your courage to show up and grow.",
-                "Look how far you've come! Your resilience is inspiring.",
-                "You deserve all the good things coming your way. Keep shining!"
-            ],
-            view: [
-                "What if this challenge is actually an opportunity in disguise?",
-                "From a different angle, this might be exactly what you needed.",
-                "Consider this: every obstacle reveals a new path forward."
-            ]
+        // ── Brain scan simulation ──────────────────────────────────
+        const brainKeywords = {
+            hear: {
+                pain:  ['hurt','pain','struggling','overwhelmed','tired','exhausted','stressed','anxious','sad','lonely','frustrated','angry','scared','worried','depressed','crying','broken','lost','hopeless','numb'],
+                joy:   ['happy','grateful','excited','proud','relieved','peaceful','content','amazing','wonderful','blessed','love','joyful','thrilled','celebrate','accomplished'],
+                crisis:['suicide','kill myself','end it','self-harm','cutting','don\'t want to live','want to die']
+            },
+            inspyre: {
+                purpose:    ['purpose','meaning','why','mission','calling','destiny','matter','contribute','impact','legacy'],
+                resilience: ['strong','overcome','survive','endure','bounce back','resilience','tough','persevere','keep going','won\'t give up','never quit'],
+                growth:     ['grow','learn','improve','better','progress','evolve','develop','transform','change','becoming','journey']
+            },
+            flow: {
+                consistency: ['consistent','routine','habit','daily','streak','discipline','regular','practice','commitment','showed up','keep at it'],
+                activity:    ['workout','exercise','run','walk','gym','yoga','meditate','stretch','train','active','moving','steps'],
+                recovery:    ['rest','recover','sleep','recharge','break','pause','breathe','relax','unwind','decompress'],
+                flow:        ['zone','flow','focused','immersed','absorbed','rhythm','groove','momentum','effortless','in the zone']
+            },
+            you: {
+                awareness:  ['realize','notice','aware','understand','recognize','see now','clarity','insight','self','reflect','my pattern','tendency'],
+                identity:   ['who I am','my values','believe','identity','authentic','true self','core','essence','character','personality'],
+                pattern:    ['always','never','every time','pattern','cycle','repeat','again','same old','tendency','habit of']
+            },
+            view: {
+                perspective: ['perspective','viewpoint','angle','consider','different','another way','reframe','look at it','what if','maybe'],
+                temporal:    ['future','past','years from now','looking back','long term','big picture','eventually','someday','over time'],
+                decision:    ['decide','choose','option','path','direction','crossroads','fork','dilemma','weighing','torn between']
+            }
         };
 
-        function generateResponse() {
-            const input = document.getElementById('userInput').value;
-            if (!input.trim()) return;
+        const templates = {
+            hear: {
+                pain:  ['I hear you — that sounds really heavy. Your feelings are valid, and reaching out takes courage.',
+                        'What you\'re carrying is real. You don\'t have to figure it all out right now.',
+                        'That weight you\'re feeling? It means you care deeply. Be gentle with yourself.'],
+                joy:   ['That energy is beautiful — soak it in! You\'ve earned this feeling.',
+                        'Love seeing this! Your positivity ripples outward more than you know.',
+                        'This is what it looks like when effort meets alignment. Celebrate it!'],
+                crisis:['If you\'re in crisis, please reach out: 988 Suicide & Crisis Lifeline (call/text 988) or Crisis Text Line (text HOME to 741741). You matter.'],
+                mixed: ['I sense a lot going on. It\'s okay to hold contradictions — that\'s being human.']
+            },
+            inspyre: {
+                purpose:    ['Your search for meaning says everything about who you are. That drive is rare — trust it.',
+                             'Purpose isn\'t found — it\'s built, one intentional day at a time. You\'re already building.'],
+                resilience: ['The fact that you\'re still here, still trying? That\'s not just strength — that\'s proof you\'re built for this.',
+                             'Resilience isn\'t about never falling. It\'s about what you do next. And you keep choosing next.'],
+                growth:     ['Growth is rarely comfortable, but you\'re in it. That discomfort? It\'s transformation in progress.',
+                             'Every version of you was necessary to become who you\'re becoming. Trust the process.']
+            },
+            flow: {
+                consistency: ['Showing up consistently is the hardest part — and you\'re doing it. That discipline compounds.',
+                              'Your routine is your foundation. Even imperfect consistency beats perfect intentions.'],
+                activity:    ['Movement changes everything — mood, clarity, energy. You chose to move today. That matters.',
+                              'Your body is your first instrument. Taking care of it is taking care of everything else.'],
+                recovery:    ['Rest isn\'t the opposite of progress — it\'s part of it. Recharge without guilt.',
+                              'Sometimes the most productive thing you can do is stop. Honor what your body needs.'],
+                flow:        ['That flow state you\'re describing? That\'s alignment. You\'re in exactly the right groove.',
+                              'When effort feels effortless, you\'ve found your channel. Stay there as long as it lasts.']
+            },
+            you: {
+                awareness:  ['That self-awareness is a superpower. Most people go years without noticing what you just caught.',
+                             'The fact that you can see your own patterns means you can shape them. That\'s real growth.'],
+                identity:   ['Knowing who you are gives you an anchor when everything else shifts. Hold onto that.',
+                             'Your values are your compass. As long as you follow them, you can\'t really be lost.'],
+                pattern:    ['You just named a pattern — that\'s the first step to changing it. Awareness precedes transformation.',
+                             'Patterns repeat until we see them clearly. You\'re seeing it now. That changes everything.']
+            },
+            view: {
+                perspective: ['What if this challenge looks completely different from a year from now? Zoom out for a moment.',
+                              'There are angles to this you haven\'t considered yet. What would a trusted friend tell you?'],
+                temporal:    ['In the grand arc of your story, this chapter matters — but it doesn\'t define the whole book.',
+                              'Future you will look back on this moment and understand why it was necessary.'],
+                decision:    ['Every path has trade-offs. Trust that you\'ll make the right call — you have before.',
+                              'When you\'re at a crossroads, remember: no choice is final. You can always course-correct.']
+            }
+        };
 
-            const voices = ['hear', 'inspyre', 'flow', 'you', 'view'];
-            const randomVoice = voices[Math.floor(Math.random() * voices.length)];
-            const voiceResponses = responses[randomVoice];
-            const randomResponse = voiceResponses[Math.floor(Math.random() * voiceResponses.length)];
+        function scanBrain(brain, text) {
+            const lower = text.toLowerCase();
+            const words = lower.split(/\s+/);
+            const categories = brainKeywords[brain];
+            let bestCategory = null;
+            let bestScore = 0;
 
-            const responseDiv = document.getElementById('demoResponse');
-            const voiceSpan = document.getElementById('responseVoice');
-            const textDiv = document.getElementById('responseText');
+            for (const [category, keywords] of Object.entries(categories)) {
+                let hits = 0;
+                for (const kw of keywords) {
+                    if (lower.includes(kw)) hits++;
+                }
+                const score = Math.min(hits / Math.max(keywords.length * 0.2, 1), 1.0);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestCategory = category;
+                }
+            }
 
-            voiceSpan.textContent = `${randomVoice} responds:`;
-            textDiv.textContent = randomResponse;
+            // Base signal from word count
+            const base = Math.min(words.length / 30, 0.15);
+            const signal = Math.min(bestScore + base, 1.0);
 
-            responseDiv.classList.remove('show');
-            setTimeout(() => {
-                responseDiv.classList.add('show');
-            }, 50);
+            return { brain, signal: Math.round(signal * 100) / 100, category: bestCategory };
+        }
+
+        function runBrainSwarm() {
+            const input = document.getElementById('userInput').value.trim();
+            if (!input) return;
+
+            const results = ['hear', 'inspyre', 'flow', 'you', 'view'].map(b => scanBrain(b, input));
+            results.sort((a, b) => b.signal - a.signal);
+
+            const dominant = results[0];
+            const active = results.filter(r => r.signal > 0.05);
+
+            // Build scan results HTML
+            let html = '';
+            for (const r of results) {
+                html += `
+                    <div class="scan-result">
+                        <span class="scan-brain">${r.brain}</span>
+                        <div class="scan-bar-container">
+                            <div class="scan-bar" style="width: ${r.signal * 100}%"></div>
+                        </div>
+                        <span class="scan-value">${r.signal.toFixed(2)}</span>
+                    </div>`;
+            }
+
+            // Consensus box
+            html += `
+                <div class="consensus-box">
+                    <div class="consensus-label">Consensus · ${active.length} brain${active.length !== 1 ? 's' : ''} active</div>
+                    <div class="consensus-dominant">Dominant: ${dominant.brain} (${dominant.category || 'general'})</div>
+                </div>`;
+
+            // Response from dominant brain
+            const brainTemplates = templates[dominant.brain];
+            const categoryTemplates = brainTemplates[dominant.category] || brainTemplates[Object.keys(brainTemplates)[0]];
+            const response = categoryTemplates[Math.floor(Math.random() * categoryTemplates.length)];
+
+            html += `
+                <div class="demo-response">
+                    <div class="response-text">${response}</div>
+                </div>`;
+
+            const container = document.getElementById('scanResults');
+            container.innerHTML = html;
+            container.classList.add('show');
+
+            // Animate pipeline steps
+            document.querySelectorAll('.pipeline-step').forEach(s => s.classList.remove('active'));
+            ['step1', 'step2', 'step3', 'step4'].forEach((id, i) => {
+                setTimeout(() => document.getElementById(id).classList.add('active'), i * 400);
+            });
+
+            // Highlight dominant brain card
+            document.querySelectorAll('.brain-card').forEach(card => {
+                card.classList.remove('active');
+                const bar = card.querySelector('.brain-signal-bar');
+                const brain = card.dataset.brain;
+                const result = results.find(r => r.brain === brain);
+                if (result) {
+                    bar.style.width = (result.signal * 100) + '%';
+                    card.querySelector('.brain-signal').style.display = 'block';
+                }
+                if (brain === dominant.brain) card.classList.add('active');
+            });
         }
 
         // Enter key support
         document.getElementById('userInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                generateResponse();
-            }
+            if (e.key === 'Enter') runBrainSwarm();
         });
 
         // Generate floating particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
+        (function createParticles() {
+            const container = document.getElementById('particles');
             for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.top = Math.random() * 100 + 'vh';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-                particlesContainer.appendChild(particle);
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = Math.random() * 100 + 'vh';
+                p.style.animationDelay = Math.random() * 20 + 's';
+                p.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(p);
             }
-        }
-
-        createParticles();
+        })();
     </script>
 </body>
 </html>
