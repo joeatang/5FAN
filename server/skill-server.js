@@ -49,6 +49,59 @@ import {
   isSkillMessage,
 } from '../skill-protocol.js';
 
+// ─── EQ Engine Skill Handlers ─────────────────────────────────
+
+import { handle as emotionScan } from '../skills/eq-engine/emotion-scan/handler.js';
+import { handle as emotionFamily } from '../skills/eq-engine/emotion-family/handler.js';
+import { handle as desireBridge } from '../skills/eq-engine/desire-bridge/handler.js';
+import { handle as microMove } from '../skills/eq-engine/micro-move/handler.js';
+import { handle as reframe } from '../skills/eq-engine/reframe/handler.js';
+import { handle as aliasMatch } from '../skills/eq-engine/alias-match/handler.js';
+import { handle as emotionBlend } from '../skills/eq-engine/emotion-blend/handler.js';
+import { handle as emotionTimeline } from '../skills/eq-engine/emotion-timeline/handler.js';
+import { handle as crisisDetect } from '../skills/eq-engine/crisis-detect/handler.js';
+
+// ─── Phase 2: Compass Skill Handlers ──────────────────────────
+
+import { handle as compassLocate } from '../skills/compass/compass-locate/handler.js';
+import { handle as compassInterpret } from '../skills/compass/compass-interpret/handler.js';
+import { handle as compassPoint } from '../skills/compass/compass-point/handler.js';
+import { handle as compassPractice } from '../skills/compass/compass-practice/handler.js';
+import { handle as shiftNavigator } from '../skills/compass/shift-navigator/handler.js';
+
+// ─── Phase 2: Community Skill Handlers ────────────────────────
+
+import { handle as feedReply } from '../skills/community/feed-reply/handler.js';
+import { handle as proactivePost } from '../skills/community/proactive-post/handler.js';
+import { handle as communityPulse } from '../skills/community/community-pulse/handler.js';
+import { handle as hiNoteCompose } from '../skills/community/hi-note-compose/handler.js';
+import { handle as socialCaption } from '../skills/community/social-caption/handler.js';
+
+// ─── Phase 2: AI Coach Skill Handlers ─────────────────────────
+
+import { handle as toneMatch } from '../skills/coach/tone-match/handler.js';
+import { handle as contentElevate } from '../skills/coach/content-elevate/handler.js';
+
+// ─── Phase 3: AI Coach Skill Handlers (Advanced) ──────────────
+
+import { handle as gymFacilitator } from '../skills/coach/gym-facilitator/handler.js';
+import { handle as coachChat } from '../skills/coach/coach-chat/handler.js';
+import { handle as nudgeEngine } from '../skills/coach/nudge-engine/handler.js';
+import { handle as milestoneDetect } from '../skills/coach/milestone-detect/handler.js';
+import { handle as memoryContext } from '../skills/coach/memory-context/handler.js';
+import { handle as journalPrompt } from '../skills/coach/journal-prompt/handler.js';
+import { handle as sessionSummary } from '../skills/coach/session-summary/handler.js';
+import { handle as wellnessScore } from '../skills/coach/wellness-score/handler.js';
+
+// ─── Phase 3: Internal Skill Handlers (LOCKED) ───────────────
+
+import { handle as earnCalculator } from '../skills/internal/earn-calculator/handler.js';
+import { handle as tierGate } from '../skills/internal/tier-gate/handler.js';
+import { handle as hi5ClaimCheck } from '../skills/internal/hi5-claim-check/handler.js';
+import { handle as qualityScore } from '../skills/internal/quality-score/handler.js';
+import { handle as antiBot } from '../skills/internal/anti-bot/handler.js';
+import { handle as vaultQuery } from '../skills/internal/vault-query/handler.js';
+
 // ─── Brain Dispatch Maps ──────────────────────────────────────
 
 const scanMap = {
@@ -66,6 +119,75 @@ const fulfillMap = {
   you: youFulfill,
   view: viewFulfill,
 };
+
+// ─── Data Skill Dispatch Map ──────────────────────────────────
+
+const handlerMap = {
+  'emotion-scan': emotionScan,
+  'emotion-family': emotionFamily,
+  'desire-bridge': desireBridge,
+  'micro-move': microMove,
+  'reframe': reframe,
+  'alias-match': aliasMatch,
+  'emotion-blend': emotionBlend,
+  'emotion-timeline': emotionTimeline,
+  'crisis-detect': crisisDetect,
+  // Phase 2: Compass
+  'compass-locate': compassLocate,
+  'compass-interpret': compassInterpret,
+  'compass-point': compassPoint,
+  'compass-practice': compassPractice,
+  'shift-navigator': shiftNavigator,
+  // Phase 2: Community
+  'feed-reply': feedReply,
+  'proactive-post': proactivePost,
+  'community-pulse': communityPulse,
+  'hi-note-compose': hiNoteCompose,
+  'social-caption': socialCaption,
+  // Phase 2: AI Coach
+  'tone-match': toneMatch,
+  'content-elevate': contentElevate,
+  // Phase 3: AI Coach (Advanced)
+  'gym-facilitator': gymFacilitator,
+  'coach-chat': coachChat,
+  'nudge-engine': nudgeEngine,
+  'milestone-detect': milestoneDetect,
+  'memory-context': memoryContext,
+  'journal-prompt': journalPrompt,
+  'session-summary': sessionSummary,
+  'wellness-score': wellnessScore,
+  // Phase 3: Internal (LOCKED)
+  'earn-calculator': earnCalculator,
+  'tier-gate': tierGate,
+  'hi5-claim-check': hi5ClaimCheck,
+  'quality-score': qualityScore,
+  'anti-bot': antiBot,
+  'vault-query': vaultQuery,
+};
+
+// ─── Internal Skill Access Control ────────────────────────────
+
+/**
+ * Check if a caller is local (same peer / same machine).
+ * Internal skills are locked to local peers only — prevents
+ * external agents from invoking earn-calculator, tier-gate, etc.
+ *
+ * @param {string} callerId - sender's public key
+ * @param {object} sidechannel - the sidechannel instance (for context)
+ * @returns {boolean}
+ */
+function isLocalCaller(callerId, sidechannel) {
+  // If no callerId, treat as local (HTTP invocations from same machine)
+  if (!callerId) return true;
+  // If callerId matches our key, it's us
+  if (sidechannel?._myKey && callerId === sidechannel._myKey) return true;
+  // If callerId is empty string, it's a local HTTP call
+  if (callerId === '') return true;
+  // Check for localhost-style markers
+  if (callerId === 'local' || callerId === 'localhost') return true;
+  // Default: deny external access for internal skills
+  return false;
+}
 
 // ─── Rate Limiting ────────────────────────────────────────────
 
@@ -298,6 +420,13 @@ export function initSkillServer(sidechannel, options = {}) {
     console.log(`[5FAN-skills] Listening on ${channel}`);
   }
 
+  // Subscribe to data skill channels (EQ Engine)
+  for (const skillName of Object.keys(handlerMap)) {
+    const channel = `5fan-skill-${skillName}`;
+    listenOnChannel(sidechannel, channel, myKey);
+    console.log(`[5FAN-skills] Listening on ${channel}`);
+  }
+
   // Subscribe to swarm skill channel
   listenOnChannel(sidechannel, SWARM_SKILL_CHANNEL, myKey);
   console.log(`[5FAN-skills] Listening on ${SWARM_SKILL_CHANNEL}`);
@@ -315,7 +444,8 @@ export function initSkillServer(sidechannel, options = {}) {
   // Cleanup stale rate limits every 2 minutes
   setInterval(cleanupRateLimits, 2 * 60_000);
 
-  console.log('[5FAN-skills] Skill server ready. 5 brains + swarm available for invocation.');
+  const totalSkills = Object.keys(scanMap).length + Object.keys(handlerMap).length + 1; // +1 for swarm
+  console.log(`[5FAN-skills] Skill server ready. ${totalSkills} skills (${Object.keys(scanMap).length} brains + ${Object.keys(handlerMap).length} data skills + swarm).`);
 }
 
 /**
@@ -403,17 +533,32 @@ async function handleSkillCallMessage(sidechannel, channel, msg, callerId) {
   const { skill, callId, input } = msg;
   const { text, ...context } = input;
 
-  console.log(`[5FAN-skills] ${skill} call from ${callerId.slice(0, 8)}... — "${text.slice(0, 60)}"`);
+  console.log(`[5FAN-skills] ${skill} call from ${callerId.slice(0, 8)}... — "${(text || '').slice(0, 60)}"`);
   trackCall(skill);
+
+  // Internal skill enforcement — only local peers can call LOCKED skills
+  const skillDef = SKILL_REGISTRY[skill];
+  if (skillDef?.internal && !isLocalCaller(callerId, sidechannel)) {
+    const error = buildError(skill, callId,
+      `Skill "${skill}" is internal-only. External access denied.`, 'ACCESS_DENIED');
+    sidechannel.broadcast(channel, JSON.stringify(error));
+    metrics.totalErrors++;
+    return;
+  }
 
   let output;
 
-  if (skill === '5fan-swarm') {
+  if (handlerMap[skill]) {
+    // Data skill — pass full input to handler
+    output = await handlerMap[skill](input);
+  } else if (skill === '5fan-swarm') {
     // Swarm call — all 5 brains + LLM
     output = await handleSwarmCall(text, context);
-  } else {
+  } else if (scanMap[skill]) {
     // Individual brain call — scan + fulfill
     output = handleBrainCall(skill, text, context);
+  } else {
+    output = { ok: false, error: `Unknown skill: ${skill}` };
   }
 
   // Build and broadcast result
@@ -486,24 +631,28 @@ function broadcastManifest(sidechannel) {
  * @param {import('express').Application} app
  */
 export function mountSkillRoutes(app) {
-  // Invoke a single brain
+  // Invoke a single brain or data skill
   app.post('/v1/5fan/skill/:brain', async (req, res) => {
     try {
       const { brain } = req.params;
-      const { text, context } = req.body;
+      const body = req.body || {};
 
-      if (!text) return res.status(400).json({ ok: false, error: 'text required' });
       if (!SKILL_REGISTRY[brain]) {
-        return res.status(404).json({ ok: false, error: `Unknown brain: ${brain}` });
+        return res.status(404).json({ ok: false, error: `Unknown skill: ${brain}` });
       }
 
       trackCall(brain);
       let output;
 
-      if (brain === '5fan-swarm') {
-        output = await handleSwarmCall(text, context || {});
+      if (handlerMap[brain]) {
+        // Data skill — pass full body as input
+        output = await handlerMap[brain](body);
+      } else if (brain === '5fan-swarm') {
+        if (!body.text) return res.status(400).json({ ok: false, error: 'text required' });
+        output = await handleSwarmCall(body.text, body.context || {});
       } else {
-        output = handleBrainCall(brain, text, context || {});
+        if (!body.text) return res.status(400).json({ ok: false, error: 'text required' });
+        output = handleBrainCall(brain, body.text, body.context || {});
       }
 
       res.json({ ok: true, ...output });

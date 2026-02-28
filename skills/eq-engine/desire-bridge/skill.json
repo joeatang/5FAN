@@ -1,0 +1,21 @@
+{
+  "skill": "desire-bridge",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Desire Bridge",
+  "emoji": "🌉",
+  "encodes": "Desire cards — the 'equal and opposite' relieving state for each emotion family.",
+  "domain": "Emotional navigation: where to move on the Hi Scale from a given family.",
+  "tagline": "Relief, not perfection. The next better feeling.",
+  "description": "Returns desire cards for an emotion family — each desire represents a state the user can work toward. Includes bridge prompts (reframing thoughts) and target families. Based on Abraham-Hicks relief concept.",
+  "channel": "5fan-skill-desire-bridge",
+  "accepts": {
+    "familyId": { "type": "string", "required": false, "description": "Emotion family ID (grief, fear, anger, etc.). Omit for overview of all families." }
+  },
+  "returns": {
+    "desires": { "type": "object[]", "description": "Desire cards: id, label, emoji, targetFamily, description, bridgePrompt." },
+    "desireCount": { "type": "number", "description": "Number of desire cards for this family." }
+  },
+  "chainsWith": ["emotion-scan", "emotion-family", "reframe", "micro-move"]
+}

@@ -34,7 +34,7 @@ export const FIVE_FAN = {
     /** Cloud LLM (Groq / OpenRouter / Together.ai — OpenAI-compatible) */
     cloudUrl: 'https://api.groq.com/openai',
     cloudModel: 'llama-3.3-70b-versatile',
-    cloudApiKey: process.env.FIVEFAN_LM_KEY || '',
+    cloudApiKey: (typeof process !== 'undefined' && process.env?.FIVEFAN_LM_KEY) || '',
 
     /** Generation parameters */
     maxTokens: 200,

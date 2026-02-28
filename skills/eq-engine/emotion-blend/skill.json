@@ -1,0 +1,36 @@
+{
+  "skill": "emotion-blend",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Emotion Blend",
+  "emoji": "🎨",
+  "encodes": "Multi-family emotional co-occurrence — detects blends, conflicts, and transitions.",
+  "domain": "Emotional complexity: mixed feelings, transitions between states, conflicting emotions.",
+  "tagline": "Feelings don't come one at a time.",
+  "description": "Scores text across all 10 emotion families simultaneously. Detects co-occurrence patterns and classifies the blend: transition (moving between families), conflict (opposing valences), resonance (same-zone reinforcement), or single. Produces a Hi Scale vector and blend signature for longitudinal tracking.",
+  "channel": "5fan-skill-emotion-blend",
+  "accepts": {
+    "text": { "type": "string", "required": true, "description": "Free text to analyze for emotional blends." }
+  },
+  "returns": {
+    "blendType": { "type": "string", "enum": ["single", "transition", "conflict", "resonance", "none"], "description": "Classification of the emotional blend." },
+    "signature": { "type": "string", "description": "Blend signature for tracking (e.g., 'grief+fear:conflict')." },
+    "hiScale": { "type": "number", "description": "Weighted average Hi Scale position (1-5)." },
+    "families": { "type": "object[]", "description": "Active families with scores and hits." },
+    "hiScaleVector": { "type": "object", "description": "Hi Scale position per active family." }
+  },
+  "chainsWith": ["emotion-scan", "emotion-family", "emotion-timeline"],
+  "exampleInvocations": [
+    {
+      "input": { "text": "I'm grateful for what I have but I can't stop worrying about losing it" },
+      "output": {
+        "ok": true,
+        "blendType": "conflict",
+        "signature": "joy+fear:conflict",
+        "hiScale": 3.0,
+        "activeFamilyCount": 2
+      }
+    }
+  ]
+}

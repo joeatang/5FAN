@@ -13,6 +13,8 @@ trac1wtsn8ru2ryknk36rd6glp2tfj0dawnh2gkjrg90gzqvwes65v78qmwjuzq
 
 ## Proof of Running
 - **Live Demo:** https://joeatang.github.io/5FAN/
+- **Production VPS:** Running 24/7 on Trac Network (peer + skill server on `104.131.183.26`)
+- **SC-Bridge:** WebSocket skill invocation active — `connected: true, authed: true, healthy: true`
 
 ---
 
@@ -181,6 +183,39 @@ Each brain has a `skill.json` manifest in its directory — machine-readable, ag
 
 ---
 
+## 41-Skill P2P System
+
+Beyond the 5 core brains, 5FAN exposes **41 discrete skills** (35 callable + 6 internal) — each invocable over P2P sidechannels or via WebSocket `skill-call` messages. No REST, no API keys.
+
+### Skill Categories
+
+| Category | Skills | What They Do |
+|----------|--------|--------------|
+| **EQ Engine** (9) | emotion-scan, emotion-family, emotion-blend, emotion-timeline, crisis-detect, alias-match, reframe, micro-move, desire-bridge | Deterministic emotional intelligence — scan, classify, reframe, and act on emotion |
+| **Compass** (5) | compass-locate, compass-interpret, compass-point, compass-practice, shift-navigator | Purpose and values navigation — find where you are, where you're going, what to practice |
+| **Community** (5) | feed-reply, proactive-post, community-pulse, hi-note-compose, social-caption | Community engagement — auto-reply, scheduled posts, sentiment pulse |
+| **AI Coach** (10) | tone-match, content-elevate, gym-facilitator, coach-chat, nudge-engine, milestone-detect, memory-context, journal-prompt, session-summary, wellness-score | 1:1 coaching — guided sessions, contextual nudges, milestone tracking, wellness scoring |
+| **Internal** (6) | earn-calculator, tier-gate, hi5-claim-check, quality-score, anti-bot, vault-query | Stay Hi Trac integration — point economy, tier access, anti-abuse |
+| **Core Brains** (6) | hear, inspyre, flow, you, view, swarm | The 5-brain consensus engine + full swarm invocation |
+
+### Invocation (WebSocket)
+
+```json
+{ "type": "skill-call", "skill": "emotion-scan", "input": { "text": "I feel lost" } }
+→ { "type": "skill-result", "skill": "emotion-scan", "result": { "ok": true, ... }, "ms": 12 }
+```
+
+### Invocation (P2P Sidechannel)
+
+```json
+{ "type": "skill:call", "skill": "compass-locate", "input": { "text": "I don't know what I want" } }
+→ { "type": "skill:result", ... }
+```
+
+All 41 skills are registered in `skill-protocol.js` and dispatched via `skill-dispatch.js`. Rate limited to 30 calls/min/caller.
+
+---
+
 ## Quick Start
 
 ### Prerequisites
@@ -323,25 +358,29 @@ When using Express routes (`server/routes.js`):
 5FAN/
 ├── brains/
 │   ├── 5fan.js              # Shared config, constants, helpers
-│   ├── hear/                # Emotional scanner
-│   │   └── skill.json       # Agent-readable skill manifest
-│   ├── inspyre/             # Values alignment
-│   │   └── skill.json
-│   ├── flow/                # Habit guardian
-│   │   └── skill.json
-│   ├── you/                 # Data analyst / profiler
-│   │   └── skill.json
-│   └── view/                # Curator + curateConsensus()
-│       └── skill.json
+│   ├── hear/                # Emotional scanner + skill.json
+│   ├── inspyre/             # Values alignment + skill.json
+│   ├── flow/                # Habit guardian + skill.json
+│   ├── you/                 # Data analyst / profiler + skill.json
+│   └── view/                # Curator + curateConsensus() + skill.json
+├── skills/
+│   ├── eq-engine/           # 9 skills: emotion-scan, crisis-detect, reframe...
+│   │   └── data/            # Emotion families, micro-moves, desire map
+│   ├── compass/             # 5 skills: locate, interpret, point, practice, shift
+│   ├── community/           # 5 skills: feed-reply, proactive-post, pulse...
+│   ├── coach/               # 10 skills: tone-match, coach-chat, nudge-engine...
+│   └── internal/            # 6 skills: earn-calculator, tier-gate, anti-bot...
 ├── server/
 │   ├── brain-swarm.js       # Parallel scan + consensus engine
 │   ├── lm-bridge.js         # Multi-provider LLM (auto-fallback)
-│   ├── skill-server.js      # Skill invocation listener (P2P)
+│   ├── skill-server.js      # 41-skill handler imports + registration
 │   ├── feed-responder.js    # Community feed auto-reply
 │   ├── proactive-scheduler.js
 │   ├── trainer-api.js       # 1:1 conversation manager
 │   └── routes.js            # Express REST API
-├── skill-protocol.js        # Skill message types + channel naming
+├── skill-dispatch.js        # Central skill dispatcher (35 callable)
+├── skill-http.js            # HTTP skill endpoint
+├── skill-protocol.js        # Skill registry + message types + channels
 ├── config.js                # Master config + feature flags
 ├── app-context.js           # System prompt identity
 ├── user-profile.js          # Onboarding + profile persistence
@@ -349,6 +388,7 @@ When using Express routes (`server/routes.js`):
 ├── lm-local.js              # Local LLM adapter
 ├── lm-cloud.js              # Cloud LLM adapter
 ├── index.js                 # Main Intercom entry point
+├── tests/                   # Skill test suites
 └── ARCHITECTURE.md          # Detailed architecture docs
 ```
 
@@ -449,5 +489,5 @@ View's `curateConsensus()` automatically incorporates the new brain's signals �
 
 ---
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **License:** Apache-2.0

@@ -1,0 +1,29 @@
+{
+  "skill": "emotion-timeline",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Emotion Timeline",
+  "emoji": "📈",
+  "encodes": "Longitudinal emotional trend analysis from timestamped snapshots.",
+  "domain": "Emotional trajectories, inflection points, stability, week-over-week delta.",
+  "tagline": "See where you've been. Know where you're headed.",
+  "description": "Takes an array of timestamped emotion snapshots (from check-ins, scans, sessions) and produces trend analysis: trajectory (rising/falling/stable), inflection points, stability score (0-100), dominant family, and week-over-week delta. No LLM — pure algorithmic analysis.",
+  "channel": "5fan-skill-emotion-timeline",
+  "accepts": {
+    "snapshots": {
+      "type": "object[]",
+      "required": true,
+      "description": "Array of { ts: number (epoch ms), hiScale: number (1-5), familyId: string }. Minimum 2 entries."
+    }
+  },
+  "returns": {
+    "trajectory": { "type": "string", "enum": ["rising", "falling", "stable", "insufficient"], "description": "Overall direction of emotional state." },
+    "delta": { "type": "number", "description": "Average Hi Scale shift (first half vs second half)." },
+    "stability": { "type": "number", "description": "Stability score 0-100 (higher = less volatile)." },
+    "inflections": { "type": "object[]", "description": "Significant shift points: ts, from, to, shift, direction." },
+    "dominant": { "type": "object", "description": "Most frequent family: { familyId, count }." },
+    "weekOverWeek": { "type": "number|null", "description": "Hi Scale change this week vs last week." }
+  },
+  "chainsWith": ["emotion-scan", "emotion-blend"]
+}

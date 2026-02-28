@@ -1,0 +1,23 @@
+{
+  "skill": "emotion-family",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Emotion Family",
+  "emoji": "👪",
+  "encodes": "Emotion family lookup — 10 families grouping 40 emotions.",
+  "domain": "Family metadata, member emotions, Hi Scale ranges, desire directions.",
+  "tagline": "Every emotion belongs somewhere.",
+  "description": "Looks up emotion families by ID or text scan. Returns family metadata (Hi Scale range, valence, desire direction, aliases) and all member emotions. Pass no arguments to get an overview of all 10 families.",
+  "channel": "5fan-skill-emotion-family",
+  "accepts": {
+    "familyId": { "type": "string", "required": false, "description": "Direct lookup by family ID (grief, fear, anger, etc.)." },
+    "text": { "type": "string", "required": false, "description": "Free text to match against family aliases." }
+  },
+  "returns": {
+    "family": { "type": "object", "description": "Family metadata: id, label, emoji, hiScaleRange, valence, description, desireDirection." },
+    "emotions": { "type": "object[]", "description": "Member emotions: id, name, emoji, hiScale." },
+    "emotionCount": { "type": "number", "description": "Number of emotions in this family." }
+  },
+  "chainsWith": ["emotion-scan", "desire-bridge", "reframe"]
+}

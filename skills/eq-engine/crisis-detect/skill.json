@@ -1,0 +1,43 @@
+{
+  "skill": "crisis-detect",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Crisis Detect",
+  "emoji": "🚨",
+  "encodes": "Expanded crisis detection with structured risk levels and resource database.",
+  "domain": "Mental health safety: suicidal ideation, self-harm, severe distress detection.",
+  "tagline": "Detection saves lives. Always free.",
+  "free": true,
+
+  "description": "Scans text for crisis indicators across 60+ phrases in two tiers (critical: direct self-harm/suicidal language, elevated: despair/hopelessness/isolation). Returns structured risk level (critical/elevated/low/none), matched phrases, and a curated resource database (988 Lifeline, Crisis Text Line, Trevor Project). DETECTION ONLY — never attempts counseling or intervention. Ships FREE to all callers.",
+
+  "channel": "5fan-skill-crisis-detect",
+
+  "accepts": {
+    "text": { "type": "string", "required": true, "description": "Text to scan for crisis indicators." }
+  },
+
+  "returns": {
+    "riskLevel": { "type": "string", "enum": ["critical", "elevated", "low", "none"], "description": "Assessed risk level." },
+    "isCrisis": { "type": "boolean", "description": "True if critical-level language detected." },
+    "isElevated": { "type": "boolean", "description": "True if critical or elevated." },
+    "matches": { "type": "object", "description": "{ critical: string[], elevated: string[], totalPhrases: number }" },
+    "resources": { "type": "object|null", "description": "Crisis resources (US + international) if any risk detected." },
+    "guidance": { "type": "string", "description": "Brief guidance for the calling application." }
+  },
+
+  "whenToUse": [
+    "ANY user-facing text pipeline — run this FIRST before other processing",
+    "Journal entries, chat messages, social posts, check-ins",
+    "Before generating AI responses to emotional content",
+    "As a safety gate in any emotional intelligence pipeline"
+  ],
+
+  "whenNotToUse": [
+    "Never skip this in user-facing contexts — err on the side of running it"
+  ],
+
+  "chainsWith": ["hear"],
+  "note": "This skill is always FREE regardless of tier. Safety is not a premium feature."
+}

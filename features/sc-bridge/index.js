@@ -79,6 +79,10 @@ class ScBridge extends Feature {
       ? new Set(config.filterChannels.map((c) => String(c)))
       : null;
     this.info = config.info && typeof config.info === 'object' ? config.info : null;
+
+    // 5FAN skill dispatch — allows skill-call messages from WS clients
+    this.skillDispatch = typeof config.skillDispatch === 'function' ? config.skillDispatch : null;
+    this.skillCallCount = 0;
   }
 
   attachSidechannel(sidechannel) {
@@ -390,6 +394,43 @@ class ScBridge extends Feature {
           return;
         }
         reply({ type: 'info', info: this.info });
+        return;
+      }
+      case 'skill-call': {
+        if (!this.skillDispatch) {
+          sendError('Skills not available on this peer.');
+          return;
+        }
+        const skillName = typeof message.skill === 'string' ? message.skill.trim() : '';
+        if (!skillName) {
+          sendError('Missing skill name.');
+          return;
+        }
+        const skillInput = message.input && typeof message.input === 'object' ? message.input : {};
+        const callStart = Date.now();
+        Promise.resolve(this.skillDispatch(skillName, skillInput))
+          .then((result) => {
+            this.skillCallCount++;
+            const elapsed = Date.now() - callStart;
+            reply({ type: 'skill-result', skill: skillName, result, ms: elapsed });
+            // Broadcast activity on sidechannel for network visibility
+            if (this.sidechannel) {
+              try {
+                this.sidechannel.broadcast(
+                  this.sidechannel.entryChannel || '0000intercom',
+                  `[5FAN-SKILL] ${skillName} (${elapsed}ms) #${this.skillCallCount}`
+                );
+              } catch (_e) {}
+            }
+          })
+          .catch((err) => {
+            reply({
+              type: 'skill-result',
+              skill: skillName,
+              result: { ok: false, error: err?.message || 'Skill handler error' },
+              ms: Date.now() - callStart,
+            });
+          });
         return;
       }
       default:

@@ -1,0 +1,22 @@
+{
+  "skill": "micro-move",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Micro Move",
+  "emoji": "🏃",
+  "encodes": "Small, actionable emotional exercises (30s-5min) per emotion family.",
+  "domain": "Embodied practices, breathing exercises, journaling prompts, grounding techniques.",
+  "tagline": "One small move. That's all it takes.",
+  "description": "Returns micro-move exercises for an emotion family. Each move has steps, duration, type, and optional journal prompt. Filter by type (body, breath, mind, write) for targeted exercises.",
+  "channel": "5fan-skill-micro-move",
+  "accepts": {
+    "familyId": { "type": "string", "required": false, "description": "Emotion family ID. Omit for overview." },
+    "type": { "type": "string", "required": false, "description": "Filter by move type: body, breath, mind, write." }
+  },
+  "returns": {
+    "moves": { "type": "object[]", "description": "Exercises: id, label, emoji, type, duration, description, steps, journalPrompt." },
+    "moveCount": { "type": "number", "description": "Number of moves returned." }
+  },
+  "chainsWith": ["emotion-scan", "emotion-family", "desire-bridge"]
+}

@@ -66,6 +66,11 @@ function markResponse() {
  */
 export async function handleIncomingMessage(channel, text, payload, context) {
   if (!FIVE_FAN.enabled) return;
+
+  // Safely coerce text — payload may pass an object instead of a string
+  if (text && typeof text === 'object') text = text.message || text.text || JSON.stringify(text);
+  if (typeof text !== 'string') text = String(text || '');
+
   if (!text || text.trim().length === 0) return;
   if (!canRespond()) return;
 

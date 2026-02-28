@@ -1,0 +1,22 @@
+{
+  "skill": "reframe",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Reframe",
+  "emoji": "🔄",
+  "encodes": "Bridge thoughts — reframing sentences that help move up the Hi Scale.",
+  "domain": "Cognitive reframing, perspective shifts, emotional bridging.",
+  "tagline": "The next better feeling thought.",
+  "description": "Returns bridge thoughts for an emotion family. Each bridge is a reframing sentence with a tone (gentle, direct, reflective) that helps the mind accept movement toward a more relieving state. Optionally links to specific desire cards.",
+  "channel": "5fan-skill-reframe",
+  "accepts": {
+    "familyId": { "type": "string", "required": false, "description": "Emotion family ID. Omit for overview." },
+    "tone": { "type": "string", "required": false, "description": "Filter by tone: gentle, direct, reflective." }
+  },
+  "returns": {
+    "bridges": { "type": "object[]", "description": "Bridge thoughts: text, tone, forDesire." },
+    "bridgeCount": { "type": "number", "description": "Number of bridges returned." }
+  },
+  "chainsWith": ["emotion-scan", "emotion-family", "desire-bridge"]
+}

@@ -1,0 +1,75 @@
+{
+  "skill": "emotion-scan",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Emotion Scan",
+  "emoji": "🎭",
+
+  "encodes": "Emotion detection from a 40-emotion vocabulary across 10 families.",
+  "domain": "Match free text to emotions — returns Hi Scale placement, family, valence, arousal.",
+  "tagline": "Feel it. Name it. Place it on the scale.",
+
+  "description": "Scans text against 40 emotions (3 categories: Hi Inspo, Neutral, Hi Opportunity) and 130+ family aliases. Returns all matched emotions with their Hi Scale position (1-5), emotion family, valence (-1 to +1), and arousal level. Pure data — no LLM required.",
+
+  "channel": "5fan-skill-emotion-scan",
+
+  "accepts": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "description": "Free text to scan for emotional content."
+    }
+  },
+
+  "returns": {
+    "matches": {
+      "type": "object[]",
+      "description": "Matched emotions with id, name, emoji, family, category, hiScale, valence, arousal, matchType."
+    },
+    "matchCount": {
+      "type": "number",
+      "description": "Total number of emotion matches found."
+    },
+    "families": {
+      "type": "object[]",
+      "description": "Unique emotion families hit: { id, label, emoji }."
+    },
+    "hiScale": {
+      "type": "number",
+      "description": "Average Hi Scale value of matched emotions (1-5)."
+    },
+    "dominantCategory": {
+      "type": "string",
+      "enum": ["hi", "neutral", "opportunity"],
+      "description": "The category with the most matches."
+    }
+  },
+
+  "whenToUse": [
+    "User expresses any emotion and you need structured data about it",
+    "First step in an EQ pipeline — scan before interpreting",
+    "Journal tagging, mood tracking, emotional logging",
+    "Building a check-in or mood assessment flow"
+  ],
+
+  "whenNotToUse": [
+    "You just need a human-sounding response (use Hear brain instead)",
+    "You need crisis detection (use crisis-detect skill)"
+  ],
+
+  "chainsWith": ["emotion-family", "desire-bridge", "reframe", "micro-move", "emotion-blend"],
+
+  "exampleInvocations": [
+    {
+      "input": { "text": "I feel so lost and frustrated today" },
+      "output": {
+        "ok": true,
+        "matchCount": 2,
+        "families": [{ "id": "doubt", "label": "Doubt & Uncertainty", "emoji": "🤔" }, { "id": "frustration", "label": "Frustration & Irritation", "emoji": "😤" }],
+        "hiScale": 2.5,
+        "dominantCategory": "neutral"
+      }
+    }
+  ]
+}

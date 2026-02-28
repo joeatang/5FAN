@@ -17,6 +17,7 @@ import ScBridge from './features/sc-bridge/index.js';
 import { handleIncomingMessage, initProactive, getSystemStatus } from './intercom-swarm.js';
 import { getStatus as lmStatus } from './server/lm-bridge.js';
 import { FIVE_FAN } from './config.js';
+import { dispatch as skillDispatch, SKILL_COUNT } from './skill-dispatch.js';
 
 const { env, storeLabel, flags } = getPearRuntime();
 
@@ -444,6 +445,7 @@ if (sidechannelExtras.length > 0) {
 if (scBridgeEnabled) {
   const portDisplay = Number.isSafeInteger(scBridgePort) ? scBridgePort : 49222;
   console.log('SC-Bridge:', `ws://${scBridgeHost}:${portDisplay}`);
+  console.log('SC-Bridge skills:', SKILL_COUNT, 'handlers loaded');
 }
 console.log('================================================================');
 console.log('');
@@ -466,6 +468,7 @@ if (scBridgeEnabled) {
     debug: scBridgeDebug,
     cliEnabled: scBridgeCliEnabled,
     requireAuth: true,
+    skillDispatch,
     info: {
       msbBootstrap: msbBootstrapHex,
       msbChannel,

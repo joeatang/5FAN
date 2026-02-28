@@ -1,0 +1,22 @@
+{
+  "skill": "alias-match",
+  "version": "1.0.0",
+  "provider": "5fan",
+  "cluster": "eq-engine",
+  "title": "Alias Match",
+  "emoji": "🔍",
+  "encodes": "Fuzzy-match text to emotion families via 130+ aliases + 40 emotion names.",
+  "domain": "Keyword matching, emotional vocabulary resolution, text-to-family mapping.",
+  "tagline": "Any word. Find the feeling.",
+  "description": "Server-side fuzzy matcher that scores text against static emotion aliases and emotion names. Returns ranked family matches with score, match type (exact/starts/partial/emotion), and the specific word matched. Useful for auto-complete, search, and text classification.",
+  "channel": "5fan-skill-alias-match",
+  "accepts": {
+    "text": { "type": "string", "required": true, "description": "Free text to match (min 2 characters)." }
+  },
+  "returns": {
+    "matches": { "type": "object[]", "description": "Ranked family matches: familyId, label, emoji, color, score, matchType, matchedOn." },
+    "matchCount": { "type": "number", "description": "Number of families matched." },
+    "topMatch": { "type": "object", "description": "Highest-scoring match, or null." }
+  },
+  "chainsWith": ["emotion-scan", "emotion-family"]
+}
