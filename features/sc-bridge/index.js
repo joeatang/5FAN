@@ -83,6 +83,9 @@ class ScBridge extends Feature {
     // 5FAN skill dispatch — allows skill-call messages from WS clients
     this.skillDispatch = typeof config.skillDispatch === 'function' ? config.skillDispatch : null;
     this.skillCallCount = 0;
+
+    // System status query — allows clients to ask for LLM/runtime status
+    this.getSystemStatus = typeof config.getSystemStatus === 'function' ? config.getSystemStatus : null;
   }
 
   attachSidechannel(sidechannel) {
@@ -394,6 +397,16 @@ class ScBridge extends Feature {
           return;
         }
         reply({ type: 'info', info: this.info });
+        return;
+      }
+      case 'system-status': {
+        if (!this.getSystemStatus) {
+          sendError('System status not available.');
+          return;
+        }
+        Promise.resolve(this.getSystemStatus())
+          .then((status) => reply({ type: 'system-status', status }))
+          .catch((err) => sendError('Status error: ' + (err.message || err)));
         return;
       }
       case 'skill-call': {

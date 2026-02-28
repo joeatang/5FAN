@@ -15,7 +15,7 @@ import { Timer } from './features/timer/index.js';
 import Sidechannel from './features/sidechannel/index.js';
 import ScBridge from './features/sc-bridge/index.js';
 import { handleIncomingMessage, initProactive, getSystemStatus } from './intercom-swarm.js';
-import { getStatus as lmStatus } from './server/lm-bridge.js';
+import { getStatus as lmStatus, cloudAvailable } from './server/lm-bridge.js';
 import { FIVE_FAN } from './config.js';
 import { dispatch as skillDispatch, SKILL_COUNT } from './skill-dispatch.js';
 
@@ -469,6 +469,15 @@ if (scBridgeEnabled) {
     cliEnabled: scBridgeCliEnabled,
     requireAuth: true,
     skillDispatch,
+    getSystemStatus: () => {
+      const cloud = cloudAvailable();
+      return {
+        lm: { local: false, cloud, active: cloud ? 'cloud' : 'template' },
+        skills: SKILL_COUNT,
+        skillCalls: scBridge ? scBridge.skillCallCount : 0,
+        uptime: typeof process !== 'undefined' && process.uptime ? Math.floor(process.uptime()) : 0,
+      };
+    },
     info: {
       msbBootstrap: msbBootstrapHex,
       msbChannel,
