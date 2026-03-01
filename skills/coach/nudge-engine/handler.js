@@ -19,6 +19,8 @@
 
 import { generate } from '../../../server/lm-bridge.js';
 
+const LLM_METRIC_GUARD = 'Use ONLY the metrics provided. If a metric is missing or uncertain, do not invent numbers and keep wording qualitative.';
+
 // ── Brain Voice Mapping ──────────────────────────────────────────────────────
 
 const BRAIN_NUDGES = {
@@ -150,6 +152,40 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function getMetricTrust(stats) {
+  const streakVal = Number(stats?.streak);
+  const hiIndexVal = Number(stats?.hiIndex);
+  const streakPresent = Number.isFinite(streakVal);
+  const hiIndexPresent = Number.isFinite(hiIndexVal);
+
+  const metricComputedAt = Number(stats?.metricComputedAt || stats?.computedAt || 0);
+  const metricsFresh = metricComputedAt > 0
+    ? (Date.now() - metricComputedAt) <= (10 * 60 * 1000)
+    : true;
+
+  return {
+    source: stats?.metricSource || stats?.streakSource || 'unknown',
+    metricsFresh,
+    streakTrusted: streakPresent && metricsFresh,
+    hiIndexTrusted: hiIndexPresent && metricsFresh,
+  };
+}
+
+function normalizeStats(stats) {
+  if (!stats || typeof stats !== 'object') return null;
+
+  const streakVal = Number(stats.streak);
+  const hiIndexVal = Number(stats.hiIndex);
+  const trust = getMetricTrust(stats);
+
+  return {
+    ...stats,
+    streak: Number.isFinite(streakVal) ? streakVal : null,
+    hiIndex: Number.isFinite(hiIndexVal) ? hiIndexVal : null,
+    _trust: trust,
+  };
+}
+
 function fillPlaceholders(text, stats) {
   return text.replace(/\{streak\}/g, String(stats?.streak || 0));
 }
@@ -196,7 +232,7 @@ function buildCandidates(stats) {
 // ── Main Handler ─────────────────────────────────────────────────────────────
 
 export async function handle(input) {
-  const stats = input?.stats;
+  const stats = normalizeStats(input?.stats);
   if (!stats || typeof stats !== 'object') {
     return { ok: false, error: 'stats object is required.' };
   }
@@ -231,15 +267,23 @@ export async function handle(input) {
   let text = null;
   let method = 'template';
 
-  try {
-    const prompt = nudgeDef.prompt(stats);
-    const llmText = await generate(prompt, '', { maxTokens: 100, temperature: 0.8 });
-    if (llmText && llmText.length > 10 && llmText.length < 300) {
-      text = llmText;
-      method = 'llm';
+  const needsTrustedStreak = selectedId === 'streak_break' || selectedId === 'celebration';
+  const needsTrustedHiIndex = selectedId === 'low_hi_index';
+  const allowLlmForSelection =
+    (!needsTrustedStreak || stats._trust.streakTrusted) &&
+    (!needsTrustedHiIndex || stats._trust.hiIndexTrusted);
+
+  if (allowLlmForSelection) {
+    try {
+      const prompt = `${nudgeDef.prompt(stats)}\n${LLM_METRIC_GUARD}`;
+      const llmText = await generate(prompt, '', { maxTokens: 100, temperature: 0.8 });
+      if (llmText && llmText.length > 10 && llmText.length < 300) {
+        text = llmText;
+        method = 'llm';
+      }
+    } catch {
+      // Fall through to template
     }
-  } catch {
-    // Fall through to template
   }
 
   // Template fallback
@@ -261,5 +305,11 @@ export async function handle(input) {
     },
     method,
     candidateCount: candidates.length,
+    trust: {
+      source: stats._trust.source,
+      metricsFresh: stats._trust.metricsFresh,
+      streakTrusted: stats._trust.streakTrusted,
+      hiIndexTrusted: stats._trust.hiIndexTrusted,
+    },
   };
 }
